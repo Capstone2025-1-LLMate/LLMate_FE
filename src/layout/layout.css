@@ -1,0 +1,39 @@
+.sidebar {
+    width: 240px;
+    background: #f2e9dd;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  .back-button {
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  .field {
+    margin: 24px 0;
+  }
+  .field h3 {
+    margin: 0;
+    color: #6b7dab;
+    font-size: 1rem;
+  }
+  .field p {
+    margin: 4px 0 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  .skills {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .skill {
+    padding: 6px 12px;
+    border-radius: 999px;
+    display: inline-block;
+    font-size: 0.9rem;
+  }
+  .dev { background: #ffe482; }
+  .comm { background: #c9fdd7; }
+  .growth { background: #c4eaff; }
+  
