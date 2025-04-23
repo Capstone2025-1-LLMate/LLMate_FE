@@ -8,7 +8,7 @@
   /* 본문 영역 */
   .content {
     flex: 1;
-    padding: 40px;
+    padding: 40px 100px 120px 80px;
     box-sizing: border-box;
     background: #fff;
   }
@@ -27,8 +27,36 @@
     border: 1px solid #ced4da;
     border-radius: 8px;
     resize: vertical;
-    font-size: 0.95rem;
+    font-size: 18px;
     line-height: 1.4;
     background: #fafafa;
+    
+}
+  
+  .qHead{
+    color: #313131;
+    font-size: 28px;
+  }
+
+  .action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .btn {
+    padding: 25px 45px;
+    border: none;
+    border-radius: 8px;
+    background: #f0ece3;
+    color: #333;
+    font-size: 1.5rem;
+    box-shadow: 1px 2px 7px 3px #ccc;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  .btn.save:hover,
+  .btn.edit:hover {
+    background: #e0ddd6;
   }
   

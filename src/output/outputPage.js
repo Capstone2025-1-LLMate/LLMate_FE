@@ -1,10 +1,10 @@
-import React from 'react';
-
+import React, { useState } from 'react';
 import './SelfIntroPage.css';  
-// import SelfIntroPage from './output/outputPage';
+
 import LayoutAside from '../layout/layoutAside';
 import Qna from './Qna';
-
+import Evaluation from './eval';
+import InputBubble from '../layout/InputButton';
 
 const qnaList = [
     {
@@ -15,25 +15,45 @@ const qnaList = [
         question: '문항 2. 가장 열정을 가지고 임했던 프로젝트를 소개해주세요. (600자 이내)',
         answer: `해외 기업에서 웹 백엔드 인턴으로 근무하며 대규모 분산 시스템을 설계...`
     },
-    // 추가 문항도 여기에 객체로 계속 넣을 수 있습니다
+    
 ];
   
-const SelfIntroPage = () => {
-  return (
-    <div className="self-intro-container">
-      <LayoutAside/>
-      <main className="content">
-        {qnaList.map((item, idx) => (
-          <Qna
-            key={idx}
-            question={item.question}
-            answer={item.answer}
-          />
-        ))}
+const OutputPage = () => {
+    const [isEditing, setIsEditing] = useState(false);
 
-      </main>
-    </div>
-  );
+    const handleSave = () => {
+        console.log('저장');
+        // 저장 로직 
+    };
+    const handleEdit = () => {
+        setIsEditing(true);
+    };
+
+    return (
+        <div className="self-intro-container">
+            <LayoutAside/>
+            <main className="content">
+            {qnaList.map((item, idx) => (
+                <Qna
+                key={idx}
+                question={item.question}
+                answer={item.answer}
+                />
+            ))}
+            <Evaluation/>
+            {/* <InputBubble/> */}
+
+            {!isEditing ? (
+                <div className="action-buttons">
+                <button className="btn save" onClick={handleSave}>저장</button>
+                <button className="btn edit" onClick={handleEdit}>수정</button>
+                </div>
+            ) : (
+                <InputBubble placeHolder={"원하시는 수정 문구를 입력해주세요."}/>
+            )}
+            </main>
+        </div>  
+    );
 };
 
-export default SelfIntroPage;
+export default OutputPage;

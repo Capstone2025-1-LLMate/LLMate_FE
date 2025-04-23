@@ -1,10 +1,12 @@
 import './App.css';
-import SelfIntroPage from './output/outputPage';
+import OutputPage from './output/outputPage';
+import InputPage from './input/inputPage';
 
 function App() {
   return (
     <div className="App">
-      <SelfIntroPage />
+      <OutputPage />
+      {/* <InputPage/> */}
     </div>
   );
 }
