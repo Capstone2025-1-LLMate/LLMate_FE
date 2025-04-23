@@ -1,0 +1,34 @@
+/* src/components/SelfIntroPage.css */
+.self-intro-container {
+    display: flex;
+    min-height: 100vh;
+    font-family: sans-serif;
+  }
+  
+  /* 본문 영역 */
+  .content {
+    flex: 1;
+    padding: 40px;
+    box-sizing: border-box;
+    background: #fff;
+  }
+  .question-block {
+    margin-bottom: 32px;
+  }
+  .question-block h4 {
+    margin-bottom: 12px;
+    font-weight: normal;
+  }
+  .question-block textarea {
+    width: 100%;
+    min-height: 160px;
+    padding: 12px;
+    box-sizing: border-box;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    resize: vertical;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    background: #fafafa;
+  }
+  
