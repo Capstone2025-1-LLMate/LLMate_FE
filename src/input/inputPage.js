@@ -41,6 +41,22 @@ const InputPage = () => {
     <div className="input-page-container">
       <LayoutAside hideText={true} />
       <main className="content">
+      {/* <button
+      className="back-button"
+      onClick={() => navigate('/login')}
+      style={{
+        backgroundColor: '#f1f1f1',
+        color: '#333',
+        padding: '8px 16px',
+        borderRadius: '8px',
+        border: 'none',
+        cursor: 'pointer',
+        marginBottom: '20px'
+        }}
+        >
+          ← 뒤로가기
+        </button> */}
+
         {/* 기업명, 직무 입력 */}
         <div className="field-inline">
           <label>
@@ -64,7 +80,7 @@ const InputPage = () => {
                 <label>
                   글자수 제한: 
                   <input
-                    type="number"
+                    type="text"
                     className="len-input"
                     value={item.len}
                     onChange={e => handleLenChange(item.id, e)}

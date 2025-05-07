@@ -56,26 +56,42 @@
   }
   
   /* 6) 토글용 상단 삼각형(back-button) */
-  .back-button {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    width: 0;
-    height: 0;
-    border-top: 12px solid transparent;
-    border-left:0;
-    background-color: #f2e9dd;
-    border-bottom: 12px solid transparent;
-    border-right: 12px solid var(--accent);
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    z-index: 2;  /* 노치보다 위에 */
-  }
-  
-  /* 접혔을 때 화살표 뒤집기 */
-  .sidebar.collapsed .back-button {
-    transform: rotate(180deg);
-  }
+ /* 기존 back-button 대체 */
+ .back-button {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 60px;
+  background: var(--sidebar-bg); /* 사이드바 배경색과 같게 */
+  border: none;
+  clip-path: polygon(
+    0 0,
+    100% 20%,
+    100% 80%,
+    0 100%
+  ); /* 노치 모양 */
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+
+/* ▶ 모양 삼각형을 CSS로 만들기 */
+.back-button::before {
+  content: '◀'; /* 또는 ▶ */
+  font-size: 30px;
+  color: var(--accent); /* 파란색 삼각형 */
+}
+.sidebar.collapsed .back-button::before {
+  content: '▶';
+}
+
+
   
   /* 7) 내용 숨기기 */
   .sidebar.collapsed .field,

@@ -12,10 +12,11 @@ const LayoutAside = ({ hideText = false }) => {
     <aside className={`sidebar ${collapsed ? 'collapsed' : ''} ${hideText ? 'no-text' : ''}`}>
       {/* 접기/펼치기 버튼 */}
       <button
-        className="back-button"
-        onClick={() => setCollapsed(prev => !prev)}
-        aria-label={collapsed ? '펼치기' : '접기'}
+      className="back-button"
+      onClick={() => setCollapsed(prev => !prev)}
+      aria-label={collapsed ? '펼치기' : '접기'}
       />
+
 
       {/* hideText 또는 collapsed 시 콘텐츠 숨김 */}
       {showContent && (
