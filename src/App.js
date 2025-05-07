@@ -5,6 +5,7 @@ import LoginPage from "./Login/LoginPage";
 import SignUpPage from "./SignUp/SignUpPage";
 import OutputPage from './output/outputPage';
 import InputPage from './input/inputPage';
+import ModifyPage from './modify/ModifyPage';
 import './App.css';
 
 function App() {
@@ -17,9 +18,13 @@ function App() {
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/output" element={<OutputPage />} />
           <Route path="/input" element={<InputPage />} />
+          <Route path="/modify"element={<ModifyPage />} />
+
         </Routes>
         {/* <OutputPage /> */}
         {/* <InputPage/> */}
+        {/* <ModifyPage/> */}
+        
       </div>
     </Router>
   );
