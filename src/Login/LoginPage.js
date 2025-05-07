@@ -7,7 +7,6 @@ function LoginPage() {
     <div style={styles.container}>
       <h2>로그인</h2>
       <LoginComponent />
-      
     </div>
   );
 }

@@ -1,10 +1,13 @@
 // src/components/InputPage.js
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './InputPage.css';
 import LayoutAside from '../layout/layoutAside';
 import InputButton from './InputButton';
 
 const InputPage = () => {
+  const navigate = useNavigate();
+
   // QnA 항목들의 { id, len, value } 상태
   const [qnaList, setQnaList] = useState([
     { id: 1, len: 600, value: '' }
@@ -120,7 +123,8 @@ const InputPage = () => {
 
         <InputButton
             label="자기소개서 제작"
-            onClick={() => console.log('제작 버튼 클릭')}
+            // onClick={() => console.log('제작 버튼 클릭')}
+            onClick={() => navigate('/output')}
         />
 
       </main>
