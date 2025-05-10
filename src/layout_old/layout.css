@@ -1,0 +1,139 @@
+/* layout.css */
+
+/* 1) 공통 변수 */
+:root {
+    --sidebar-bg: #f2e9dd;
+    --sidebar-width: 240px;
+    --sidebar-collapsed-width: 60px;
+    --accent: #4b6cab;
+  }
+  
+  /* 2) 사이드바 기본(expanded) */
+  .sidebar {
+    position: relative;
+    width: var(--sidebar-width);
+    min-height: 100vh;
+    background: var(--sidebar-bg);
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: visible;              /* 앞으로 버튼/노치 잘리면 안 되니 visible */
+    transition: width 0.3s ease;
+  }
+  
+  /* 3) 왼쪽 세로 강조선 */
+  .sidebar::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 0;
+    width: 4px;
+    height: calc(100% - 40px);
+    background: var(--accent);
+  }
+  
+  /* 4) 오른쪽 노치 */
+  .sidebar::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 60px;
+    background: var(--sidebar-bg);
+    clip-path: polygon(
+      0   0,
+      100% 20%,
+      100% 80%,
+      0   100%
+    );
+    z-index: 1;
+  }
+  
+  /* 5) collapsed 상태 (접었을 때) */
+  .sidebar.collapsed {
+    width: var(--sidebar-collapsed-width);
+  }
+  
+  /* 6) 토글용 상단 삼각형(back-button) */
+ /* 기존 back-button 대체 */
+ .back-button {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 60px;
+  background: var(--sidebar-bg); /* 사이드바 배경색과 같게 */
+  border: none;
+  clip-path: polygon(
+    0 0,
+    100% 20%,
+    100% 80%,
+    0 100%
+  ); /* 노치 모양 */
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+
+/* ▶ 모양 삼각형을 CSS로 만들기 */
+.back-button::before {
+  content: '◀'; /* 또는 ▶ */
+  font-size: 30px;
+  color: var(--accent); /* 파란색 삼각형 */
+}
+.sidebar.collapsed .back-button::before {
+  content: '▶';
+}
+
+
+  
+  /* 7) 내용 숨기기 */
+  .sidebar.collapsed .field,
+  .sidebar.collapsed .skills {
+    display: none;
+  }
+  
+  /* 8) 필드 (제목 + 값) */
+  .field {
+    margin: 24px 0;
+  }
+  .field h3 {
+    margin: 0;
+    color: var(--accent);
+    font-size: 1.3rem;
+  }
+  .field p {
+    margin: 4px 0 0;
+    font-size: 1.4rem;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+  
+  /* 9) 스킬 태그 */
+  .skills {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .skill {
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    width: 50%;
+    box-shadow: 0px 5px 10px 0px #ccc;
+    text-align: center;
+}
+  .dev    { background: #ffe482; }
+  .comm   { background: #c9fdd7; }
+  .growth { background: #c4eaff; }
+  
+
+  .mt50{margin-top:50px;}
