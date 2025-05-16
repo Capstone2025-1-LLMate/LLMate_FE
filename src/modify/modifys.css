@@ -1,0 +1,59 @@
+/* src/components/ModifyPage.css */
+.modify-page {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+  }
+  .compare-wrapper {
+    flex: 1;
+    display: flex;
+    gap: 32px;
+    padding: 40px;
+    box-sizing: border-box;
+  }
+  .version-container {
+    flex: 1;
+    background: #fff;
+    border: 1px solid #e0ddd6;
+    border-radius: 8px;
+    padding: 24px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+  }
+  .version-title {
+    margin: 0 0 16px;
+    font-size: 1.25rem;
+    color: #4b6cab;
+    border-left: 4px solid #4b6cab;
+    padding-left: 12px;
+  }
+  .content-block {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  
+  /* 하단 선택 버튼 */
+  .select-bottom {
+    display: block;
+    background: #f0ece3;
+    color: #333;
+    font-size: 1.5rem;
+    margin: 24px auto 0;
+    padding: 10px 60px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  .select-bottom:hover,
+  .select-bottom:hover {
+    background: #e0ddd6;
+  }
+
+  /* 각 섹션 내부 QnA와 Evaluation 간 유사한 간격 확보 */
+  

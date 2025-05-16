@@ -5,7 +5,7 @@ import './SelfIntroPage.css';
 const Qna = ({ question, answer }) => {
   return (
     <div className="question-block">
-      <h4>{question}</h4>
+      <h4 className="qHead">{question}</h4>
       <textarea
         readOnly
         value={answer} 
