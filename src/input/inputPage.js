@@ -39,7 +39,12 @@ const InputPage = () => {
 
   return (
     <div className="input-page-container">
-      <LayoutAside hideText={true} />
+      {/* <LayoutAside hideText={true} /> */}
+      <LayoutAside
+        hideText={true}
+        defaultCollapsed={true}   // 이 한 줄을 추가!
+      />
+
       <main className="content">
       {/* <button
       className="back-button"

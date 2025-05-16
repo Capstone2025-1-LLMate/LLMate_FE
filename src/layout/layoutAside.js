@@ -2,8 +2,10 @@
 import React, { useState } from "react";
 import "./layout.css";
 
-const LayoutAside = ({ hideText = false, children }) => {
-  const [collapsed, setCollapsed] = useState(false);
+// const LayoutAside = ({ hideText = false, children }) => {
+//   const [collapsed, setCollapsed] = useState(false);
+const LayoutAside = ({ hideText = false, defaultCollapsed = false, children }) => {
+  const [collapsed, setCollapsed] = useState(defaultCollapsed);
 
   const showContent = !hideText && !collapsed;
 
