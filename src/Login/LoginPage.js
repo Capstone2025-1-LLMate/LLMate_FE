@@ -1,12 +1,14 @@
 // src/Login/LoginPage.js
 import React from "react";
 import LoginComponent from "./LoginComponent";
+import GoogleLoginBtn from "./googlelogin_component";
 
 function LoginPage() {
   return (
     <div style={styles.container}>
       <h2>로그인</h2>
       <LoginComponent />
+      <GoogleLoginBtn />
     </div>
   );
 }
