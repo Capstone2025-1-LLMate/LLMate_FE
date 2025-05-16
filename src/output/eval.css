@@ -1,0 +1,65 @@
+.evaluation-container{
+    font-family: sans-serif;
+    background: #fff;
+    margin-bottom: 80px;
+} 
+.evaluation-title {
+    margin-bottom: 40px;
+    border-left: 4px solid #4b6cb7;
+    padding-left: 12px;
+    font-size: 1.5rem;
+    color: #333;
+  }
+  .evaluation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+  .evaluation-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .avatar {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .avatar img{
+    position: absolute;
+    width: 80px;
+    height: 80px;
+}
+  .bubble {
+    background: #f0ece3;
+    padding: 30px 32px;
+    border-radius: 12px;
+    position: relative;
+    max-width: 800px;
+  }
+  .bubble::before {
+    content: '';
+    position: absolute;
+    left: -8px;
+    top: 16px;
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 8px solid #f0ece3;
+  }
+  .reviewer-name {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 23px;
+  }
+  .review-text {
+    margin: 0;
+    line-height: 1.4;
+    color: #333;
+    font-size: 19px;
+  }
+  

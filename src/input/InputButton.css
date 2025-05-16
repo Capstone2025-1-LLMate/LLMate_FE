@@ -1,0 +1,29 @@
+:root {
+    --accent: #4b6cab;
+  }
+  
+  .input-button {
+    display: block;
+    background: #f0ece3;
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    box-shadow: 3px 5px 10px 3px #ccc;
+    border: none;
+    color: #333;
+    font-size: 1.5rem;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.2s ease;
+  }
+  
+  .input-button:hover {
+    background: #e0ddd6;
+  }
+  
+  .input-button:active {
+    filter: brightness(0.9);
+  }
+  
