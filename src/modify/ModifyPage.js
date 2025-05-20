@@ -23,7 +23,7 @@ const ModifyPage = () => {
     return (
       <div className="modify-page">
         {/* 왼쪽 사이드바 */}
-        <LayoutAside hideText />
+        <LayoutAside />
   
         {/* 비교 컨테이너 */}
         <div className="compare-wrapper">

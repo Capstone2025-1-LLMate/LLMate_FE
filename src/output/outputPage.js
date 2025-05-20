@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './SelfIntroPage.css';  
-import LayoutAside from '../layout/layoutAside';
+import LayoutAside from '../layout_old/layoutAside';
 import Qna from './Qna';
 import Evaluation from './eval';
 
@@ -46,7 +46,10 @@ const OutputPage = () => {
     
     return (
         <div className="self-intro-container">
-            <LayoutAside/>
+            <LayoutAside
+                hideText={false}
+            />
+
             <main className="content">
             {initialQna.map((item, idx) => (
                 <Qna

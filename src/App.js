@@ -7,7 +7,9 @@ import MyPage from "./mypage/mypage";
 import OutputPage from './output/outputPage';
 import InputPage from './input/inputPage';
 import ModifyPage from './modify/ModifyPage';
+import ServerTest from './ServerTest';
 import LayoutAside from './layout/layoutAside'
+
 import './App.css';
 
 function App() {
@@ -15,15 +17,17 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/" element={<LoginPage />} />
+          <Route path="/" element={<InputPage/>} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/output" element={<OutputPage />} />
           <Route path="/input" element={<InputPage />} />
           <Route path="/modify"element={<ModifyPage />} />
+          <Route path="/stest" element={<ServerTest />} />
 
         </Routes>
+
         {/* <OutputPage /> */}
         {/* <InputPage/> */}
         {/* <ModifyPage/> */}
