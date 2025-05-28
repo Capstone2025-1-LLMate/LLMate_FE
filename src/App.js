@@ -16,7 +16,7 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/" element={<LoginPage/>} />
+          <Route path="/" element={<ModifyPage/>} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/output" element={<OutputPage />} />
