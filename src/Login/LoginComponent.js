@@ -2,10 +2,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+ 
 function LoginComponent() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
+
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -35,7 +38,6 @@ function LoginComponent() {
         로그인
       </button>
 
-      {/* 회원가입 페이지로 이동하는 버튼 */}
       <button
         type="button"
         onClick={() => navigate("/signup")}
