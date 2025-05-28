@@ -1,13 +1,12 @@
 // src/App.js
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LoginPage from "./login/loginpage";
+import LoginPage from "./Login/loginpage";
 import MyPage from "./mypage/mypage";
 import OutputPage from './output/outputPage';
 import InputPage from './input/inputPage';
 import ModifyPage from './modify/ModifyPage';
 import ServerTest from './ServerTest';
-import LayoutAside from './layout/layoutAside'
 
 import './App.css';
 
