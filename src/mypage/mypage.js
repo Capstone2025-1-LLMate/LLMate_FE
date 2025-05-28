@@ -153,7 +153,7 @@ export default function MyPage() {
                   {essay.isRevision && <span className="revision-badge">수정중</span>}
                 </div>
                 <div className="question">{essay.essay_question.question}</div>
-                <div className="content-text">{essay.content}</div>
+                {/* <div className="content-text">{essay.content}</div> */}
                 <div className="created-at">{new Date(essay.created_at).toLocaleString()}</div>
               </div>
             </div>
