@@ -1,31 +1,34 @@
 import React from "react";
-import { GoogleLogin } from "@react-oauth/google"; 
-import { jwtDecode } from "jwt-decode";
+import { GoogleLogin } from "@react-oauth/google";
 
 const GoogleLoginBtn = () => {
   const loginHandle = async (response) => {
     console.log("Google Response:", response);
 
-    const idToken = response.credential;
-
-    // (선택) 토큰 디코드하여 사용자 정보 확인
-    const decoded = jwtDecode(idToken);
-    console.log("Decoded Token:", decoded);
+    const accessToken = response.credential;
 
     try {
-      // 백엔드로 id_token 전송
-      const res = await fetch("http://localhost:8000/api/v1/auth/google-verify", {
+      const res = await fetch("http://localhost:8000/auth/google", { // ✅ 백엔드 엔드포인트로 수정
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id_token: idToken })
+        body: JSON.stringify({
+          provider: "google",
+          token: accessToken, // ✅ access_token 전달
+        }),
       });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
 
       const data = await res.json();
       console.log("Server Response:", data);
 
-      // localStorage.setItem("access_token", data.access_token); // 원하면 저장
+      // 토큰 저장 (선택)
+      localStorage.setItem("access_token", data.access_token);
+
     } catch (error) {
       console.error("Google login verification failed:", error);
     }
@@ -39,7 +42,7 @@ const GoogleLoginBtn = () => {
       }}
       width="400px"
       text="continue_with"
-      locale="zh_CN"
+      locale="ko"
       shape="circle"
       theme="filled_blue"
       logo_alignment="left"
