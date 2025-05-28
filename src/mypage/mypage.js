@@ -1,32 +1,46 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LayoutAside from "../layout/layoutAside";
 import "./mypage.css";
 
 const MyPage = () => {
+  const [essays, setEssays] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [pinnedItems, setPinnedItems] = useState([]);
-  const itemsPerPage = 9;
   const [currentPage, setCurrentPage] = useState(1);
+  const [editingEssayId, setEditingEssayId] = useState(null);
+  const [editForm, setEditForm] = useState({ title: "", content: "" });
 
-  const totalItems = 20;
+  const itemsPerPage = 9;
+
+  useEffect(() => {
+    const fetchEssays = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/essay", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("access_token")
+          }
+        });
+        const data = await res.json();
+        setEssays(data);
+      } catch (error) {
+        console.error("자소서 불러오기 실패:", error);
+      }
+    };
+
+    fetchEssays();
+  }, []);
+
+  const totalItems = essays.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = essays.slice(startIndex, endIndex);
 
-  const toggleSelectItem = (index) => {
-    if (selectedItems.includes(index)) {
-      setSelectedItems(selectedItems.filter((item) => item !== index));
-    } else {
-      setSelectedItems([...selectedItems, index]);
-    }
-  };
-
-  const handlePinItems = () => {
-    setPinnedItems([...pinnedItems, ...selectedItems]);
-    setSelectedItems([]);
-  };
-
-  const handleDeleteItems = () => {
-    setPinnedItems(pinnedItems.filter((item) => !selectedItems.includes(item)));
-    setSelectedItems([]);
+  const toggleSelectItem = (id) => {
+    setSelectedItems((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
   };
 
   const handlePageChange = (page) => {
@@ -34,65 +48,109 @@ const MyPage = () => {
     setSelectedItems([]);
   };
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = Array.from({ length: totalItems }).slice(startIndex, endIndex);
+  const handleEditClick = (essay) => {
+    setEditingEssayId(essay.id);
+    setEditForm({ title: essay.title, content: essay.content });
+  };
+
+  const handleEditSubmit = async () => {
+    try {
+      const res = await fetch("http://localhost:8000/essay", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + localStorage.getItem("access_token")
+        },
+        body: JSON.stringify({
+          id: editingEssayId,
+          ...editForm
+        })
+      });
+
+      if (!res.ok) throw new Error("수정 실패");
+
+      const updated = await res.json();
+      setEssays((prev) =>
+        prev.map((essay) => (essay.id === editingEssayId ? updated : essay))
+      );
+
+      setEditingEssayId(null);
+      setEditForm({ title: "", content: "" });
+    } catch (err) {
+      console.error("수정 중 오류 발생:", err);
+    }
+  };
+
+  const handleDeleteItems = async () => {
+    try {
+      for (const id of selectedItems) {
+        const res = await fetch(`http://localhost:8000/essay/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("access_token")
+          }
+        });
+        if (!res.ok) {
+          throw new Error(`자소서 ${id} 삭제 실패`);
+        }
+      }
+
+      setEssays((prev) => prev.filter((essay) => !selectedItems.includes(essay.id)));
+      setSelectedItems([]);
+    } catch (err) {
+      console.error("삭제 중 오류:", err);
+    }
+  };
 
   return (
     <div className="mypage-container">
-      {/* 사이드바 */}
       <LayoutAside>
         <div className="field">
           <h3>자소서 관리</h3>
         </div>
 
-        <div className="pinned-section">
-          <div className="pinned-header">
-            <span className="star-icon">⭐</span>
-            <span className="section-title">즐겨찾기</span>
-          </div>
-
-          <div className="divider"></div>
-
-          <div className="pinned-list">
-            {pinnedItems.length > 0 ? (
-              pinnedItems.map((item, index) => (
-                <div key={index} className="pinned-item">
-                  자소서 {item + 1}
-                </div>
-              ))
-            ) : (
-              <div className="no-pinned">고정된 자소서가 없습니다.</div>
-            )}
-          </div>
-        </div>
-
         <div className="sidebar-footer">
-          <button className="sidebar-btn" onClick={handlePinItems}>
-            고정하기
-          </button>
           <button className="sidebar-btn" onClick={handleDeleteItems}>
             삭제하기
           </button>
         </div>
       </LayoutAside>
 
-      {/* 메인 컨텐츠 */}
       <div className="content">
         <div className="grid-container">
-          {currentItems.map((_, index) => (
-            <div key={index} className="item-container">
+          {currentItems.map((essay) => (
+            <div key={essay.id} className="item-container">
               <div className="checkbox-container">
-                <input 
-                  type="checkbox" 
-                  checked={selectedItems.includes(startIndex + index)} 
-                  onChange={() => toggleSelectItem(startIndex + index)} 
+                <input
+                  type="checkbox"
+                  checked={selectedItems.includes(essay.id)}
+                  onChange={() => toggleSelectItem(essay.id)}
                 />
               </div>
-
               <div className="item-card">
                 <div className="note-icon">📄</div>
-                <div className="item-title">자소서 {startIndex + index + 1}</div>
+                {editingEssayId === essay.id ? (
+                  <>
+                    <input
+                      type="text"
+                      value={editForm.title}
+                      onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+                      placeholder="제목"
+                    />
+                    <textarea
+                      value={editForm.content}
+                      onChange={(e) => setEditForm({ ...editForm, content: e.target.value })}
+                      placeholder="내용"
+                    />
+                    <button onClick={handleEditSubmit}>저장</button>
+                  </>
+                ) : (
+                  <>
+                    <div className="item-title">{essay.title}</div>
+                    <button onClick={() => handleEditClick(essay)}>수정하기</button>
+                  </>
+                )}
               </div>
             </div>
           ))}

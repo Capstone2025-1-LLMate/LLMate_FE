@@ -1,5 +1,5 @@
 import React from "react";
-import LoginComponent from "./logincomponent";
+import LoginComponent from "./login_component";
 import GoogleLoginBtn from "./googlelogin_component"; // 이름 일치하게 import
 import { GoogleOAuthProvider } from "@react-oauth/google"; // Provider import
 
