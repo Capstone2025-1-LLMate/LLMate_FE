@@ -2,7 +2,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./login/loginpage";
-import SignUpPage from "./SignUp/SignUpPage";
 import MyPage from "./mypage/mypage";
 import OutputPage from './output/outputPage';
 import InputPage from './input/inputPage';
@@ -17,9 +16,8 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/" element={<InputPage/>} />
+          <Route path="/" element={<LoginPage/>} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/output" element={<OutputPage />} />
           <Route path="/input" element={<InputPage />} />
