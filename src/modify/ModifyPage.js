@@ -1,9 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-
 import './modifys.css';
-import LayoutAside from '../layout/layoutAside';
 import Qna from '../output/Qna';
 import Evaluation from '../output/eval';
 
@@ -22,9 +20,7 @@ const ModifyPage = () => {
   
     return (
       <div className="modify-page">
-        {/* 왼쪽 사이드바 */}
-        <LayoutAside />
-  
+        
         {/* 비교 컨테이너 */}
         <div className="compare-wrapper">
           {/* 수정 전 */}
