@@ -1,15 +1,18 @@
-// src/Login/LoginPage.js
 import React from "react";
 import LoginComponent from "./logincomponent";
-import GoogleLoginBtn from "./googlelogin_component";
+import GoogleLoginBtn from "./googlelogin_component"; // 이름 일치하게 import
+import { GoogleOAuthProvider } from "@react-oauth/google"; // Provider import
 
 function LoginPage() {
   return (
-    <div style={styles.container}>
-      <h2>로그인</h2>
-      <LoginComponent />
-      <GoogleLoginBtn />
-    </div>
+    <GoogleOAuthProvider clientId="GOOGLE_CLIENT_ID"> {/* 실제 값으로 교체 */}
+      <div style={styles.container}>
+        <h2>로그인</h2>
+        <LoginComponent />
+        <hr />
+        <GoogleLoginBtn /> {/* 여기 이름도 일치 */}
+      </div>
+    </GoogleOAuthProvider>
   );
 }
 
@@ -20,10 +23,9 @@ const styles = {
     padding: "2rem",
     border: "2px solid #5984B0",
     borderRadius: "8px",
-    boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-    textAlign: "center",
-    color: "#5984B0"
-  },
+    boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+    textAlign: "center"
+  }
 };
 
 export default LoginPage;
