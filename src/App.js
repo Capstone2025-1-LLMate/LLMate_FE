@@ -8,7 +8,7 @@ import OutputPage from './output/outputPage';
 import InputPage from './input/inputPage';
 import ModifyPage from './modify/ModifyPage';
 import ServerTest from './ServerTest';
-import LayoutAside from './layout/layoutAside'
+// import LayoutAside from './layout/layoutAside'
 
 import './App.css';
 

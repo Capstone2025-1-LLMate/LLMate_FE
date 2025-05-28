@@ -1,0 +1,68 @@
+/* ResumePopup.css */
+.resume-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.resume-modal {
+  background: #fff;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.resume-content {
+  padding: 16px 0;
+}
+
+.resume-section {
+  margin-bottom: 24px;
+}
+
+.resume-section h4 {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+  color: #4b6cab;
+}
+
+.resume-section p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.evaluation-item {
+  margin-bottom: 8px;
+}
+
+.save-btn {
+  margin-top: 16px;
+  background: #4b6cab;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+}

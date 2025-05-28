@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import LayoutAside from "../layout/layoutAside";
+import ResumePopup from "../popup/ResumePop";
 import "./mypage.css";
 
 const MyPage = () => {
@@ -39,6 +40,7 @@ const MyPage = () => {
   const currentItems = Array.from({ length: totalItems }).slice(startIndex, endIndex);
 
   return (
+    // <ResumePopup>
     <div className="mypage-container">
       {/* 사이드바 */}
       <LayoutAside>
@@ -111,6 +113,7 @@ const MyPage = () => {
         </div>
       </div>
     </div>
+    // </ResumePopup>
   );
 };
 

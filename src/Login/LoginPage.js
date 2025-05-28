@@ -1,6 +1,6 @@
 // src/Login/LoginPage.js
 import React from "react";
-import LoginComponent from "./LoginComponent";
+import LoginComponent from "./logincomponent";
 
 function LoginPage() {
   return (
