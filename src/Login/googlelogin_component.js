@@ -1,4 +1,5 @@
 import React from "react";
+import { useGoogleLogin } from "@react-oauth/google";  // ← 이 부분을 꼭 추가하세요
 
 // const GoogleLoginBtn = () => {
 //   const redirectToGoogleLogin = () => {
@@ -46,7 +47,8 @@ const GoogleLoginBtn = () => {
 
         // (선택) 로그인 후 홈 화면으로 라우팅
         // 예: navigate("/", { replace: true });
-
+        navigate("/input");
+        
       } catch (err) {
         console.error("로그인 중 에러 발생:", err);
       }
