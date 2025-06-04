@@ -40,6 +40,7 @@ const InputPage = () => {
     };
 
     try {
+      // 1. 자기소개서 생성 요청
       const response = await fetch('http://localhost:8000/essays/generate/full', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -48,7 +49,44 @@ const InputPage = () => {
 
       const result = await response.json();
       console.log('서버 응답:', result);
-      navigate('/output', { state: result });
+
+      const { essay_id, user_id, essay_question_id, title, content } = result;
+
+      // 2. LLM 평가 요청
+      const feedbackResponse = await fetch('http://localhost:8000/feedback/multi', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          essay_id,
+          prompt_style: '강점과 약점을 구분해서 평가해줘',
+        }),
+      });
+
+      const feedbackData = await feedbackResponse.json();
+
+      const modelMap = {
+        chatgpt: 'ChatGPT',
+        gemini: 'Perplexity',
+        claude: 'Claude',
+      };
+
+      const evaluations = (feedbackData.feedbacks || []).map((fb, idx) => ({
+        id: idx + 1,
+        reviewer: modelMap[fb.llm_model] || fb.llm_model,
+        text: fb.feedback_text,
+      }));
+
+      // 3. output 페이지로 이동
+      navigate('/output', {
+        state: {
+          essay_id,
+          user_id,
+          essay_question_id,
+          title,
+          content,
+          evaluations
+        }
+      });
 
     } catch (err) {
       console.error('자기소개서 생성 실패:', err);
@@ -59,7 +97,6 @@ const InputPage = () => {
     <div className="input-page-container">
       <LayoutAside hideText={true} />
       <main className="content">
-
         <div className="field-inline">
           <label>
             <span className="label">기업명:</span>

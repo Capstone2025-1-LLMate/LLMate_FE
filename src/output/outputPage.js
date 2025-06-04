@@ -11,12 +11,11 @@ const OutputPage = () => {
   const { state } = useLocation();
 
   // inputPage에서 넘어온 데이터
-  const { essay_id, title, content, user_id, essay_question_id } = state || {};
+  const { essay_id, title, content, user_id, essay_question_id, evaluations } = state || {};
 
-  // 기본 예시로 초기값
   const [displayTitle, setDisplayTitle] = useState('문항 예시 제목');
   const [displayContent, setDisplayContent] = useState('자기소개서 예시 본문');
-  const [evaluations, setEvaluations] = useState([
+  const [displayEvaluations, setDisplayEvaluations] = useState([
     { id: 1, reviewer: 'ChatGPT', text: '' },
     { id: 2, reviewer: 'Perplexity', text: '' },
     { id: 3, reviewer: 'Claude', text: '' },
@@ -24,52 +23,14 @@ const OutputPage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editRequest, setEditRequest] = useState('');
 
-  // 서버로부터 받아온 에세이 덮어쓰기
   useEffect(() => {
     if (title) setDisplayTitle(title);
     if (content) setDisplayContent(content);
-  }, [title, content]);
-
-  // AI 피드백 요청
-  useEffect(() => {
-    if (!essay_id) return;
-
-    const fetchFeedbacks = async () => {
-      try {
-        const res = await fetch('http://localhost:8000/essays/feedback', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            essay_id,
-            prompt_style: '강점과 약점을 구분해서 평가해줘',
-          }),
-        });
-
-        const data = await res.json();
-
-        const modelMap = {
-          chatgpt: 'ChatGPT',
-          gemini: 'Perplexity',
-          claude: 'Claude',
-        };
-
-        const formatted = (data.feedbacks || []).map((fb, idx) => ({
-          id: idx + 1,
-          reviewer: modelMap[fb.llm_model] || fb.llm_model,
-          text: fb.feedback_text,
-        }));
-
-        setEvaluations(formatted);
-      } catch (err) {
-        console.error('AI 피드백 요청 실패:', err);
-      }
-    };
-
-    fetchFeedbacks();
-  }, [essay_id]);
+    if (evaluations) setDisplayEvaluations(evaluations);
+  }, [title, content, evaluations]);
 
   const handleSave = () => {
-    navigate('/mypage');
+    navigate('/mypage'); // 저장 버튼 누르면 마이페이지로 이동
   };
 
   const handleEdit = () => {
@@ -79,7 +40,7 @@ const OutputPage = () => {
   const handleSubmitModify = async () => {
     try {
       // 1. 수정 요청 보내기
-      const revisionResponse = await fetch('http://localhost:8000/revision/(essay_id)', {
+      const revisionResponse = await fetch(`http://localhost:8000/revision/${essay_id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -93,7 +54,7 @@ const OutputPage = () => {
       }
 
       // 2. 수정된 자기소개서 요청
-      const essayRes = await fetch('http://localhost:8000/revisions/(essay_id)', {
+      const essayRes = await fetch(`http://localhost:8000/revisions/${essay_id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -136,7 +97,7 @@ const OutputPage = () => {
           original: {
             title: displayTitle,
             content: displayContent,
-            evaluations: evaluations,
+            evaluations: displayEvaluations,
           },
           edited: {
             title: displayTitle,
@@ -158,7 +119,7 @@ const OutputPage = () => {
       <main className="content">
         <Qna question={displayTitle} answer={displayContent} />
 
-        <Evaluation evaluations={evaluations} />
+        <Evaluation evaluations={displayEvaluations} />
 
         {!isEditing ? (
           <div className="action-buttons">
