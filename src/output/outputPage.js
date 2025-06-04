@@ -1,53 +1,76 @@
+// src/output/outputPage.js
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './SelfIntroPage.css';
 import LayoutAside from '../layout_old/layoutAside';
 import Qna from './Qna';
 import Evaluation from './eval';
 
 const OutputPage = () => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [qnaList, setQnaList] = useState([
-    { question: '문항 1. 지원하신 동기와 기대하시는 바를 말씀해주세요. (600자 이내)', answer: '' },
-    { question: '문항 2. 가장 열정을 가지고 임했던 프로젝트를 소개해주세요. (600자 이내)', answer: '' },
-  ]);
+  const navigate = useNavigate();
+  const { state } = useLocation();
+
+  // 전달받은 값
+  const { essay_id, title, content } = state || {};
+
+  // 기본 예시로 초기값 설정
+  const [displayTitle, setDisplayTitle] = useState('문항 예시 제목');
+  const [displayContent, setDisplayContent] = useState('자기소개서 예시 본문');
   const [evaluations, setEvaluations] = useState([
     { id: 1, reviewer: 'ChatGPT', text: '' },
     { id: 2, reviewer: 'Perplexity', text: '' },
     { id: 3, reviewer: 'Claude', text: '' },
   ]);
+  const [isEditing, setIsEditing] = useState(false);
   const [editRequest, setEditRequest] = useState('');
 
-  const navigate = useNavigate();
-
+  // 에세이 데이터를 받아오면 초기값 덮어쓰기
   useEffect(() => {
-    const fetchData = async () => {
+    if (title) setDisplayTitle(title);
+    if (content) setDisplayContent(content);
+  }, [title, content]);
+
+  // AI 평가 요청
+  useEffect(() => {
+    if (!essay_id) return;
+
+    const fetchFeedbacks = async () => {
       try {
-        const res = await fetch('http://localhost:8000/testLogin');
+        const res = await fetch('http://localhost:8000/essays/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            essay_id,
+            prompt_style: '강점과 약점을 구분해서 평가해줘',
+          }),
+        });
+
         const data = await res.json();
 
-        if (data.qnaList) setQnaList(data.qnaList);
+        const modelMap = {
+          chatgpt: 'ChatGPT',
+          gemini: 'Perplexity',
+          claude: 'Claude',
+        };
 
-        if (data.evaluations) {
-          const reviewers = ['ChatGPT', 'Perplexity', 'Claude'];
-          const formattedEvals = data.evaluations.map((text, idx) => ({
-            id: idx + 1,
-            reviewer: reviewers[idx] || `AI ${idx + 1}`,
-            text,
-          }));
-          setEvaluations(formattedEvals);
-        }
-      } catch (error) {
-        console.error('데이터 불러오기 실패:', error);
+        const formatted = (data.feedbacks || []).map((fb, idx) => ({
+          id: idx + 1,
+          reviewer: modelMap[fb.llm_model] || fb.llm_model,
+          text: fb.feedback_text,
+        }));
+
+        setEvaluations(formatted);
+      } catch (err) {
+        console.error('AI 피드백 요청 실패:', err);
       }
     };
 
-    fetchData();
-  }, []);
+    fetchFeedbacks();
+  }, [essay_id]);
 
   const handleSave = () => {
-    console.log('저장');
-    // 저장 로직 필요 시 작성
+    console.log('저장 클릭');
+    // 저장 로직 또는 navigate('/save') 등 연결
   };
 
   const handleEdit = () => {
@@ -56,13 +79,11 @@ const OutputPage = () => {
 
   const handleSubmitModify = async () => {
     try {
-      const response = await fetch('http://localhost:8000/testLogin', {
+      const response = await fetch('http://localhost:8000/feedback/multi', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          original: { qnaList, evaluations },
+          original: { title: displayTitle, content: displayContent, evaluations },
           editRequest,
         }),
       });
@@ -79,19 +100,20 @@ const OutputPage = () => {
 
         navigate('/modify', {
           state: {
-            original: { qnaList, evaluations },
+            original: { title: displayTitle, content: displayContent, evaluations },
             edited: {
-              qnaList: result.qnaList || [],
+              title: result.title || displayTitle,
+              content: result.content || displayContent,
               evaluations: formattedEditedEvals,
             },
           },
         });
       } else {
-        alert('수정 요청 전송 실패! 다시 시도해주세요.');
+        alert('수정 요청 실패! 다시 시도해주세요.');
       }
     } catch (error) {
-      console.error('수정 요청 중 에러 발생:', error);
-      alert('서버 오류가 발생했습니다. 나중에 다시 시도해주세요.');
+      console.error('수정 요청 에러:', error);
+      alert('서버 오류가 발생했습니다.');
     }
   };
 
@@ -99,9 +121,7 @@ const OutputPage = () => {
     <div className="self-intro-container">
       <LayoutAside hideText={false} />
       <main className="content">
-        {qnaList.map((item, idx) => (
-          <Qna key={idx} question={item.question} answer={item.answer} />
-        ))}
+        <Qna question={displayTitle} answer={displayContent} />
 
         <Evaluation evaluations={evaluations} />
 
