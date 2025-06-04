@@ -1,13 +1,8 @@
 // src/App.js
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-<<<<<<< HEAD
-import LoginPage from "./login/loginpage";
-=======
-import LoginPage from "./login/LoginPage";
-import SignUpPage from "./SignUp/SignUpPage";
+import LoginPage from "./login/loginPage";
 import MyPage from "./mypage/mypage";
->>>>>>> 97aef35cd1750ec379b23d0fbd64382b12630dcd
 import OutputPage from './output/outputPage';
 import InputPage from './input/inputPage';
 import ModifyPage from './modify/modifyPage';
@@ -18,7 +13,7 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/" element={<LoginPage />} />
+          <Route path="/" element={<MyPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/output" element={<OutputPage />} />
           <Route path="/input" element={<InputPage />} />
