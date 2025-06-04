@@ -1,7 +1,13 @@
 // src/App.js
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+<<<<<<< HEAD
 import LoginPage from "./login/loginpage";
+=======
+import LoginPage from "./login/LoginPage";
+import SignUpPage from "./SignUp/SignUpPage";
+import MyPage from "./mypage/mypage";
+>>>>>>> 97aef35cd1750ec379b23d0fbd64382b12630dcd
 import OutputPage from './output/outputPage';
 import InputPage from './input/inputPage';
 import ModifyPage from './modify/modifyPage';
