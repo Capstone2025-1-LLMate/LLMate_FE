@@ -1,25 +1,28 @@
 /* layout.css */
 
 /* 1) 공통 변수 */
+
 :root {
-    --sidebar-bg: #f2e9dd;
-    --sidebar-width: 240px;
-    --sidebar-collapsed-width: 60px;
-    --accent: #4b6cab;
-  }
-  
-  /* 2) 사이드바 기본(expanded) */
-  .sidebar {
-    position: relative;
-    width: var(--sidebar-width);
-    min-height: 100vh;
-    background: var(--sidebar-bg);
-    padding: 20px;
-    box-sizing: border-box;
-    overflow: visible;              /* 앞으로 버튼/노치 잘리면 안 되니 visible */
-    transition: width 0.3s ease;
-  }
-  
+  --sidebar-bg: #f2e9dd;
+  --sidebar-width: 240px;
+  --sidebar-collapsed-width: 60px;
+  --accent: #4b6cab;
+  --button-bg: #4b6cab;        
+  --button-color: #ffffff;     
+  --button-hover-bg: #3a5390;  
+}
+
+.sidebar {
+  position: relative;
+  width: var(--sidebar-width);
+  min-height: 100vh;
+  background: var(--sidebar-bg);
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: visible;              /* 앞으로 버튼/노치 잘리면 안 되니 visible */
+  transition: width 0.3s ease;
+}
+   */
   /* 3) 왼쪽 세로 강조선 */
   .sidebar::before {
     content: '';
@@ -136,4 +139,44 @@
   .growth { background: #c4eaff; }
   
 
-  .mt50{margin-top:50px;}
+.mt50{margin-top:50px;}
+
+  .auth-section {
+  text-align: center;
+}
+
+.auth-button {
+  background-color: var(--button-bg);
+  border: none;
+  color: var(--button-color);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.4rem 0.8rem;      /* + 가로/세로 패딩을 넣어 버튼 형태 강조 */
+  border-radius: 4px;         /* + 모서리에 둥근 모양 추가 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* + 살짝 그림자 추가 */
+  transition: background-color 0.2s ease, transform 0.1s ease; /* + 부드러운 호버 & 클릭 효과 */
+}
+
+
+.auth-button:hover {
+  background-color: var(--button-hover-bg);
+}
+
+.auth-button:active {
+  transform: scale(0.97); /* + 눌렀을 때 살짝 작아지는 효과 */
+}
+
+.user-name {
+  font-size: 1.1rem;               /* 조금 더 큰 글자 */
+  font-weight: 600;                /* 살짝 굵게 */
+  color: var(--accent);            /* accent 색상 사용 */
+  cursor: pointer;                 /* 클릭 가능하다는 힌트 */
+  padding: 0.2rem 0.4rem;          /* + 약간의 패딩으로 가독성 향상 */
+  border-radius: 4px;              /* + 모서리에 둥근 모양 추가 */
+  transition: background-color 0.2s ease, color 0.2s ease; /* 부드러운 효과 */
+}
+
+.user-name:hover {
+  background-color: var(--accent);
+  color: var(--button-color);      /* 호버 시 글자색을 흰색으로 변경 */
+}

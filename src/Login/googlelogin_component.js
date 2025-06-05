@@ -1,5 +1,6 @@
 import React from "react";
-import { useGoogleLogin } from "@react-oauth/google";  // ← 이 부분을 꼭 추가하세요
+import { useGoogleLogin } from "@react-oauth/google";
+import { useNavigate } from "react-router-dom";
 
 // const GoogleLoginBtn = () => {
 //   const redirectToGoogleLogin = () => {
@@ -12,43 +13,42 @@ import { useGoogleLogin } from "@react-oauth/google";  // ← 이 부분을 꼭 
 //     </button>
 //   );
 // };
+
+
 const GoogleLoginBtn = () => {
+  const navigate = useNavigate();
+
   const login = useGoogleLogin({
-    // 구글 로그인 팝업이 성공하면 아래 onSuccess가 호출됨
     onSuccess: async (tokenResponse) => {
       try {
-        // 구글에서 내려준 credential (id_token 또는 access_token)
-        // tokenResponse.access_token 형태로 사용
+        // 1) 구글 로그인 팝업에서 받은 access_token
         const googleToken = tokenResponse.access_token;
 
-        // ② 구글 토큰을 백엔드에 POST
-        const resp = await fetch("http://localhost:8000/auth/login", {
-          method: "POST",
+        // 2) 백엔드 /auth/login?provider=google&token=<googleToken> 호출
+        const url = new URL("http://localhost:8000/auth/login");
+        url.searchParams.set("provider", "google");
+        url.searchParams.set("token", googleToken);
+
+        const resp = await fetch(url.toString(), {
+          method: "GET",
           headers: {
-            "Content-Type": "application/json",
+            "Accept": "application/json",
           },
-          // 백엔드에서 provider: "google", token: "<구글에서 받은 토큰>" 을 expect한다고 가정
-          body: JSON.stringify({
-            provider: "google",
-            token: googleToken,
-          }),
         });
 
         if (!resp.ok) {
           throw new Error(`서버 에러: ${resp.status}`);
         }
 
+        // 3) 백엔드에서 리턴한 JWT(access_token)를 받아서 로컬 스토리지에 저장
         const data = await resp.json();
-        // ③ 이제 data 안에 { user_id, name, email, profile_image, access_token, token_type } 이 담겨 있을 것
+        console.log(data)
         console.log("백엔드 응답 전체:", data);
-
-        // ④ 브라우저 로컬에 JWT만 저장해 두면, 이후 다른 API 호출 때 꺼내 쓸 수 있다.
         localStorage.setItem("access_token", data.access_token);
+        localStorage.setItem("user_name", data.name);
 
-        // (선택) 로그인 후 홈 화면으로 라우팅
-        // 예: navigate("/", { replace: true });
+        // 4) 로그인 후 다음 페이지로 이동
         navigate("/input");
-        
       } catch (err) {
         console.error("로그인 중 에러 발생:", err);
       }
@@ -75,8 +75,10 @@ const styles = {
     color: "#fff",
     fontSize: "16px",
     border: "none",
-    cursor: "pointer"
-  }
+    cursor: "pointer",
+  },
 };
 
 export default GoogleLoginBtn;
+
+
