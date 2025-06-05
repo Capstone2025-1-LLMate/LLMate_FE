@@ -2,12 +2,12 @@
 import React, { useState } from 'react';
 import './eval.css';
 import chatgptIcon from '../asset/gptLogo.png';
-import perplexityIcon from '../asset/perLogo.png';
+import geminiIcon from '../asset/gemLogo.png';
 import claudeIcon from '../asset/claudeLogo.png';
 
 const icons = {
     ChatGPT: chatgptIcon,
-    Perplexity: perplexityIcon,
+    Gemini: geminiIcon,
     Claude: claudeIcon,
 };
 

@@ -11,23 +11,40 @@ const OutputPage = () => {
   const { state } = useLocation();
 
   // inputPage에서 넘어온 데이터
-  const { essay_id, title, content, user_id, essay_question_id, evaluations } = state || {};
+  const { essay_id, title, content, user_id, essay_question_id, evaluations,question } = state || {};
 
+  const [displayQuestion, setDisplayQuestion] = useState('문항 예시(없음)');
   const [displayTitle, setDisplayTitle] = useState('문항 예시 제목');
   const [displayContent, setDisplayContent] = useState('자기소개서 예시 본문');
   const [displayEvaluations, setDisplayEvaluations] = useState([
     { id: 1, reviewer: 'ChatGPT', text: '' },
-    { id: 2, reviewer: 'Perplexity', text: '' },
+    { id: 2, reviewer: 'Gemini', text: '' },
     { id: 3, reviewer: 'Claude', text: '' },
   ]);
   const [isEditing, setIsEditing] = useState(false);
   const [editRequest, setEditRequest] = useState('');
-
+  
+  const modelMap = {
+    "gpt-4o-mini": "ChatGPT",
+    "gemini":      "Gemini",
+    "claude":      "Claude",
+    "Perplexity": "Gemini"
+  };
+  
   useEffect(() => {
+    if (question)      setDisplayQuestion(question);
     if (title) setDisplayTitle(title);
     if (content) setDisplayContent(content);
     if (evaluations) setDisplayEvaluations(evaluations);
-  }, [title, content, evaluations]);
+    if (evaluations) {
+      const remapped = evaluations.map((item, idx) => ({
+        id: item.id ?? idx + 1,
+        reviewer: modelMap[item.reviewer] || item.reviewer,
+        text: item.text
+      }));
+      setDisplayEvaluations(remapped);
+    }
+  }, [question, title, content, evaluations]);
 
   const handleSave = () => {
     navigate('/mypage'); // 저장 버튼 누르면 마이페이지로 이동
@@ -79,11 +96,7 @@ const OutputPage = () => {
 
       const feedbackData = await feedbackRes.json();
 
-      const modelMap = {
-        chatgpt: 'ChatGPT',
-        gemini: 'Perplexity',
-        claude: 'Claude',
-      };
+    
 
       const newEvaluations = (feedbackData.feedbacks || []).map((fb, idx) => ({
         id: idx + 1,
@@ -117,8 +130,12 @@ const OutputPage = () => {
     <div className="self-intro-container">
       <LayoutAside hideText={false} />
       <main className="content">
-        <Qna question={displayTitle} answer={displayContent} />
-
+        {/* <Qna question={displayTitle} answer={displayContent} /> */}
+         <Qna 
+          question={displayQuestion} 
+          title={displayTitle} 
+          answer={displayContent} 
+        />
         <Evaluation evaluations={displayEvaluations} />
 
         {!isEditing ? (

@@ -5,6 +5,8 @@ import './InputPage.css';
 import LayoutAside from '../layout/layoutAside';
 import InputButton from './InputButton';
 
+const Spinner = () => <div className="spinner" />;
+
 const InputPage = () => {
   const navigate = useNavigate();
 
@@ -18,7 +20,20 @@ const InputPage = () => {
   const [weakness, setWeakness] = useState('');
   const [motivation, setMotivation] = useState('');
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSubmit = async () => {
+
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      console.error("로그인이 필요합니다.");
+      // 로그인 페이지로 이동하거나 에러 처리
+      navigate("/login");
+      return;
+    }
+
+    setIsLoading(true);
+
     const experiences = [
       { type: 'experience', content: experience },
       { type: 'strength', content: strength },
@@ -43,9 +58,23 @@ const InputPage = () => {
       // 1. 자기소개서 생성 요청
       const response = await fetch('http://localhost:8000/essays/generate/full', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+
+        },
         body: JSON.stringify(payload)
       });
+
+      if (response.status === 422) {
+        const detail = await response.json();
+        console.error('Validation Error Detail:', detail);
+        throw new Error('유효성 검사 실패(422)');
+      }
+
+      if (!response.ok) {
+        throw new Error(`에세이 생성 실패: ${response.status}`);
+      }
 
       const result = await response.json();
       console.log('서버 응답:', result);
@@ -53,14 +82,21 @@ const InputPage = () => {
       const { essay_id, user_id, essay_question_id, title, content } = result;
 
       // 2. LLM 평가 요청
-      const feedbackResponse = await fetch('http://localhost:8000/feedback/multi', {
+      const feedbackResponse = await fetch('http://localhost:8000/api/feedbacks/multi', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({
           essay_id,
           prompt_style: '강점과 약점을 구분해서 평가해줘',
         }),
       });
+
+      if (!feedbackResponse.ok) {
+        throw new Error(`LLM 평가 요청 실패: ${feedbackResponse.status}`);
+      }
 
       const feedbackData = await feedbackResponse.json();
 
@@ -84,18 +120,23 @@ const InputPage = () => {
           essay_question_id,
           title,
           content,
-          evaluations
+          evaluations,
+          question: questionText    // ← 여기에서 questionText를 “question”이라는 이름으로 넣어줍니다.
         }
       });
 
     } catch (err) {
       console.error('자기소개서 생성 실패:', err);
+    }finally {
+      // 6) 로딩 끝
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="input-page-container">
-      <LayoutAside hideText={true} />
+      {/* <LayoutAside hideText={true} /> */}
+      <LayoutAside/>
       <main className="content">
         <div className="field-inline">
           <label>
@@ -176,10 +217,39 @@ const InputPage = () => {
           />
         </div>
 
-        <InputButton label="자기소개서 제작" onClick={handleSubmit} />
+        <div style={{ textAlign: "center", marginTop: "1rem" }}>
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <InputButton label="자기소개서 제작" onClick={handleSubmit} />
+          )}
+        </div>
       </main>
     </div>
   );
 };
 
 export default InputPage;
+
+/*
+
+문항
+스스로의 의지로 새로운 도전이나 변화를 시도했던 경험을 작성해 주세요.
+
+경험 활동
+고등교 졸업 후 빠르게 취직해 인턴 경험을 함.
+그러나 이론의 중요를 느껴 대학에 다시가 수학함.
+이를 통해 탄탄한 기초를 다지게 됨
+
+장점
+논리적 사고력
+끝없는 탐구
+왜 인지를 파악하려는 깊은 고찰
+
+단점
+걱정이 많다
+
+지원동기 및 목표
+네이버는 꿈의 직장이므로 꼭 합류해 세상을 바꾸고싶다.
+끊임없이 공부해 멋진 사람이 되는 것
+*/

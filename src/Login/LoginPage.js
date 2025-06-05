@@ -5,7 +5,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google"; // Provider import
 
 function LoginPage() {
   return (
-    <GoogleOAuthProvider clientId="GOOGLE_CLIENT_ID"> {/* 실제 값으로 교체 */}
+    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
       <div style={styles.container}>
         <h2>로그인</h2>
         <LoginComponent />

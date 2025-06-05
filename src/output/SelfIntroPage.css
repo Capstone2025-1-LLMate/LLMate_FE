@@ -114,4 +114,28 @@
   .input-field:focus {
     outline: 2px solid var(--accent);
   }
-  
+
+.question-block {
+  margin-bottom: 2rem;
+}
+
+/* 문항(질문) 헤더 */
+.qHead {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+/* 소제목 + 본문을 보여 주는 textarea */
+.answer-textarea {
+  width: 100%;
+  min-height: 200px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  resize: vertical;       /* 세로로만 크기 조정 가능 */
+  white-space: pre-wrap;  /* 줄바꿈 유지 */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fafafa;
+}

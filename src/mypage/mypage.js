@@ -114,7 +114,7 @@ export default function MyPage() {
     <div className="mypage-container">
       <LayoutAside>
         <div className="field">
-          <h3>자소서 관리</h3>
+          <h3>자기소개서 목록</h3>
         </div>
         <div className="sidebar-footer">
           <button
