@@ -96,8 +96,6 @@ const OutputPage = () => {
 
       const feedbackData = await feedbackRes.json();
 
-    
-
       const newEvaluations = (feedbackData.feedbacks || []).map((fb, idx) => ({
         id: idx + 1,
         reviewer: modelMap[fb.llm_model] || fb.llm_model,
