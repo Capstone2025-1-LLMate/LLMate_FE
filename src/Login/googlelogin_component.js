@@ -28,6 +28,7 @@ const GoogleLoginBtn = () => {
           throw new Error(`서버 에러: ${resp.status}`);
         }
 
+        // 3) 백엔드에서 리턴한 JWT(access_token)를 받아서 로컬 스토리지에 저장
         const data = await resp.json();
         console.log("백엔드 응답 전체:", data);
         localStorage.setItem("access_token", data.access_token);
@@ -51,3 +52,5 @@ const GoogleLoginBtn = () => {
 };
 
 export default GoogleLoginBtn;
+
+

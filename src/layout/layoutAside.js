@@ -79,6 +79,11 @@ const LayoutAside = ({ hideText = false, defaultCollapsed = false, children }) =
           </div>
 
           {/* 기존 children 콘텐츠 */}
+          <div className="create-link-wrapper">
+            <a href="/input" className="btn-create">
+              자기소개서 제작하기
+            </a>
+          </div>
           {children}
         </div>
       )}

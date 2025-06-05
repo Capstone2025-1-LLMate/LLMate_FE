@@ -151,6 +151,13 @@ const OutputPage = () => {
         throw new Error("Failed to fetch feedback");
       }
       const feedbackData = await feedbackRes.json();
+
+      const modelMap = {
+        chatgpt: 'ChatGPT',
+        gemini: 'Perplexity',
+        claude: 'Claude',
+      };
+
       const newEvaluations = (feedbackData.feedbacks || []).map((fb, idx) => ({
         id: idx + 1,
         reviewer: modelMap[fb.llm_model] || fb.llm_model,
