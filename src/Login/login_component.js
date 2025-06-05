@@ -1,29 +1,27 @@
-// src/Login/LoginComponent.js
+// src/Login/login_component.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./login.css"; // 통합된 스타일 파일 import
 
- 
 function LoginComponent() {
-  const [email, setEmail] = useState("");
+  const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
-
-  const navigate = useNavigate();
-
+  const navigate                = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
     console.log("로그인 시도:", email, password);
-    // 로그인 처리 로직
+    // 실제 로그인 처리 로직을 여기에 추가하세요.
   };
 
   return (
-    <form onSubmit={handleLogin} style={styles.form}>
+    <form onSubmit={handleLogin} className="login-form">
       <input
         type="email"
         placeholder="이메일"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        style={styles.input}
+        className="login-input"
         required
       />
       <input
@@ -31,52 +29,21 @@ function LoginComponent() {
         placeholder="비밀번호"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        style={styles.input}
+        className="login-input"
         required
       />
-      <button type="submit" style={styles.button}>
+      <button type="submit" className="login-button">
         로그인
       </button>
-
       <button
         type="button"
         onClick={() => navigate("/signup")}
-        style={styles.button}
+        className="login-button"
       >
         회원가입
       </button>
     </form>
   );
 }
-
-const styles = {
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "1rem",
-    padding: "1rem",
-  },
-  input: {
-    padding: "0.75rem",
-    fontSize: "1rem",
-    border: "1px solid #5984B0",
-    borderRadius: "4px",
-  },
-  button: {
-    padding: "0.75rem",
-    backgroundColor: "#F2EBE5",
-    border: "1px solid #5984B0",
-    fontWeight: "bold",
-    cursor: "pointer",
-  },
-  linkButton: {
-    background: "none",
-    border: "none",
-    color: "#5984B0",
-    cursor: "pointer",
-    textDecoration: "underline",
-    fontSize: "0.9rem",
-  },
-};
 
 export default LoginComponent;

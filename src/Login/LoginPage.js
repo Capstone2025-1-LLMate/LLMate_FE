@@ -1,31 +1,21 @@
+// src/Login/LoginPage.js
 import React from "react";
 import LoginComponent from "./login_component";
-import GoogleLoginBtn from "./googlelogin_component"; // 이름 일치하게 import
-import { GoogleOAuthProvider } from "@react-oauth/google"; // Provider import
+import GoogleLoginBtn from "./googlelogin_component"; 
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import "./login.css"; // 통합된 스타일 파일 import
 
 function LoginPage() {
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
-      <div style={styles.container}>
-        <h2>로그인</h2>
+      <div className="login-page-container">
+        <h2 className="text-center">로그인</h2>
         <LoginComponent />
         <hr />
-        <GoogleLoginBtn /> {/* 여기 이름도 일치 */}
+        <GoogleLoginBtn />
       </div>
     </GoogleOAuthProvider>
   );
 }
-
-const styles = {
-  container: {
-    maxWidth: "400px",
-    margin: "100px auto",
-    padding: "2rem",
-    border: "2px solid #5984B0",
-    borderRadius: "8px",
-    boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-    textAlign: "center"
-  }
-};
 
 export default LoginPage;
