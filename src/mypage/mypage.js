@@ -173,7 +173,7 @@ const handlePDF = async () => {
     modalEl.style.maxHeight = origMaxHeight;
     modalEl.style.height = origHeight;
   }
-};
+}
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
