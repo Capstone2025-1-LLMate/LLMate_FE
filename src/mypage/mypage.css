@@ -76,7 +76,8 @@
 }
 
 .page-btn {
-  background-color: #F2EBE5;
+  background: #d9d7ce;
+  color:#333;
   border: 1px solid var(--accent-color);
   padding: 10px 15px;
   cursor: pointer;
@@ -84,7 +85,8 @@
 
 .page-btn.active,
 .page-btn:hover {
-  background-color: #d9d7ce;
+  background: #4a90e2;
+  color: #fff;
 }
 
 /* 사이드바 즐겨찾기 스타일링 */
@@ -320,8 +322,6 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  background: #4a90e2;
-  color: #fff;
   font-weight: 500;
   transition: background 0.2s;
 }

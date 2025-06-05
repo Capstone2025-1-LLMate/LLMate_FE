@@ -6,6 +6,8 @@ import LayoutAside from "../layout_old/layoutAside";
 import Qna from "./Qna";
 import Evaluation from "./eval";
 
+const Spinner = () => <div className="spinner" />;
+
 const OutputPage = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -153,9 +155,10 @@ const OutputPage = () => {
       const feedbackData = await feedbackRes.json();
 
       const modelMap = {
-        chatgpt: 'ChatGPT',
-        gemini: 'Perplexity',
-        claude: 'Claude',
+        "gpt-4o-mini": "ChatGPT",
+        gemini: "Gemini",
+        claude: "Claude",
+        Perplexity: "Gemini",
       };
 
       const newEvaluations = (feedbackData.feedbacks || []).map((fb, idx) => ({
@@ -206,6 +209,20 @@ const OutputPage = () => {
             </button>
           </div>
         ) : (
+          // <div className="input-bubble">
+          //   <textarea
+          //     className="input-field"
+          //     placeholder="원하시는 수정 문구를 입력해주세요."
+          //     value={editRequest}
+          //     onChange={(e) => setEditRequest(e.target.value)}
+          //   />
+          //   <button
+          //     className="submit-arrow"
+          //     aria-label="제출"
+          //     onClick={handleSubmitModify}
+          //     disabled={loading}
+          //   />
+          // </div>
           <div className="input-bubble">
             <textarea
               className="input-field"
@@ -213,18 +230,21 @@ const OutputPage = () => {
               value={editRequest}
               onChange={(e) => setEditRequest(e.target.value)}
             />
-            <button
-              className="submit-arrow"
-              aria-label="제출"
-              onClick={handleSubmitModify}
-              disabled={loading}
-            />
-          </div>
-        )}
-
-        {error && (
-          <div style={{ color: "red", marginTop: "1rem", textAlign: "center" }}>
-            {error}
+            {/* ② loading 상태에 따라 Spinner 또는 버튼 표시 */}
+            {loading ? (
+              <Spinner />
+            ) : (
+              <button
+                className="submit-arrow"
+                aria-label="제출"
+                onClick={handleSubmitModify}
+              />
+            )}
+            {error && (
+              <div style={{ color: "red", marginTop: "1rem", textAlign: "center" }}>
+                {error}
+              </div>
+            )}
           </div>
         )}
       </main>
