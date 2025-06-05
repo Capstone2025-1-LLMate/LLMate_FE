@@ -111,69 +111,69 @@ export default function MyPage() {
     }
   };
 
-const handlePDF = async () => {
-  if (!printRef.current) return;
+// const handlePDF = async () => {
+//   if (!printRef.current) return;
 
-  // (1) 모달 내부 전체가 스크롤 없이 보이도록 스타일 잠시 변경
-  const modalEl = printRef.current;
-  const origOverflow = modalEl.style.overflow;
-  const origMaxHeight = modalEl.style.maxHeight;
-  const origHeight = modalEl.style.height;
-  modalEl.style.overflow = "visible";
-  modalEl.style.maxHeight = "none";
-  modalEl.style.height = "auto";
+//   // (1) 모달 내부 전체가 스크롤 없이 보이도록 스타일 잠시 변경
+//   const modalEl = printRef.current;
+//   const origOverflow = modalEl.style.overflow;
+//   const origMaxHeight = modalEl.style.maxHeight;
+//   const origHeight = modalEl.style.height;
+//   modalEl.style.overflow = "visible";
+//   modalEl.style.maxHeight = "none";
+//   modalEl.style.height = "auto";
 
-  try {
-    // (2) html2canvas로 전체 영역 캡처 (scale 옵션으로 해상도 높이기)
-    const canvas = await html2canvas(modalEl, {
-      scale: window.devicePixelRatio || 2,
-      scrollX: 0,
-      scrollY: 0,
-      width: modalEl.scrollWidth,
-      height: modalEl.scrollHeight,
-      windowWidth: modalEl.scrollWidth,
-      windowHeight: modalEl.scrollHeight,
-    });
+//   try {
+//     // (2) html2canvas로 전체 영역 캡처 (scale 옵션으로 해상도 높이기)
+//     const canvas = await html2canvas(modalEl, {
+//       scale: window.devicePixelRatio || 2,
+//       scrollX: 0,
+//       scrollY: 0,
+//       width: modalEl.scrollWidth,
+//       height: modalEl.scrollHeight,
+//       windowWidth: modalEl.scrollWidth,
+//       windowHeight: modalEl.scrollHeight,
+//     });
 
-    const imgData = canvas.toDataURL("image/png");
+//     const imgData = canvas.toDataURL("image/png");
 
-    // (3) jsPDF 생성 (A4 포맷, 단위: pt)
-    const pdf = new jsPDF("p", "pt", "a4");
-    const pageWidth = pdf.internal.pageSize.getWidth();   // A4 가로(pt)
-    const pageHeight = pdf.internal.pageSize.getHeight(); // A4 세로(pt)
+//     // (3) jsPDF 생성 (A4 포맷, 단위: pt)
+//     const pdf = new jsPDF("p", "pt", "a4");
+//     const pageWidth = pdf.internal.pageSize.getWidth();   // A4 가로(pt)
+//     const pageHeight = pdf.internal.pageSize.getHeight(); // A4 세로(pt)
 
-    // (4) 캔버스 픽셀 크기 → PDF pt 크기 비율 계산
-    const imgProps = pdf.getImageProperties(imgData);
-    const imgWidthPt = pageWidth;
-    const imgHeightPt = (imgProps.height * imgWidthPt) / imgProps.width;
+//     // (4) 캔버스 픽셀 크기 → PDF pt 크기 비율 계산
+//     const imgProps = pdf.getImageProperties(imgData);
+//     const imgWidthPt = pageWidth;
+//     const imgHeightPt = (imgProps.height * imgWidthPt) / imgProps.width;
 
-    // (5) 이미지가 한 페이지 높이를 넘으면 분할해서 PDF에 추가
-    const totalPages = Math.ceil(imgHeightPt / pageHeight);
+//     // (5) 이미지가 한 페이지 높이를 넘으면 분할해서 PDF에 추가
+//     const totalPages = Math.ceil(imgHeightPt / pageHeight);
 
-    for (let page = 0; page < totalPages; page++) {
-      const yOffset = -page * pageHeight;
-      if (page > 0) pdf.addPage();
-      pdf.addImage(
-        imgData,
-        "PNG",
-        0,
-        yOffset,
-        imgWidthPt,
-        imgHeightPt
-      );
-    }
+//     for (let page = 0; page < totalPages; page++) {
+//       const yOffset = -page * pageHeight;
+//       if (page > 0) pdf.addPage();
+//       pdf.addImage(
+//         imgData,
+//         "PNG",
+//         0,
+//         yOffset,
+//         imgWidthPt,
+//         imgHeightPt
+//       );
+//     }
 
-    // (6) PDF 저장
-    pdf.save("essays.pdf");
-  } catch (err) {
-    console.error("PDF 생성 중 오류:", err);
-  } finally {
-    // (7) 모달 스타일 원복
-    modalEl.style.overflow = origOverflow;
-    modalEl.style.maxHeight = origMaxHeight;
-    modalEl.style.height = origHeight;
-  }
-}
+//     // (6) PDF 저장
+//     pdf.save("essays.pdf");
+//   } catch (err) {
+//     console.error("PDF 생성 중 오류:", err);
+//   } finally {
+//     // (7) 모달 스타일 원복
+//     modalEl.style.overflow = origOverflow;
+//     modalEl.style.maxHeight = origMaxHeight;
+//     modalEl.style.height = origHeight;
+//   }
+// }
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -190,6 +190,158 @@ const handlePDF = async () => {
     setIsPopupOpen(false);
     setPopupEssayData(null);
   };
+const handlePDF = async () => {
+    if (!printRef.current) return;
+
+    const containerEl = printRef.current;
+    // 1) 원래 스타일을 백업
+    const origOverflow = containerEl.style.overflow;
+    const origMaxHeight = containerEl.style.maxHeight;
+    const origHeight = containerEl.style.height;
+
+    // 2) 전체 내용을 스크롤 없이 다 노출되도록 잠시 스타일 변경
+    containerEl.style.overflow = "visible";
+    containerEl.style.maxHeight = "none";
+    containerEl.style.height = "auto";
+
+    try {
+      // 3) jsPDF 인스턴스 생성 (A4, 단위: pt)
+      const pdf = new jsPDF("p", "pt", "a4");
+      const pageWidthPt = pdf.internal.pageSize.getWidth();   // A4 가로(pt)
+      const pageHeightPt = pdf.internal.pageSize.getHeight(); // A4 세로(pt)
+
+      // 4) 각 “.pdf-section” 요소를 순서대로 가져와서 처리
+      const sectionEls = containerEl.querySelectorAll(".pdf-section");
+      let currentYPt = 0;  // 현재 PDF 페이지 상에서 쓰여진 높이(단위: pt)
+
+      for (let i = 0; i < sectionEls.length; i++) {
+        const sectionEl = sectionEls[i];
+
+        // (a) 해당 섹션을 html2canvas로 캡처
+        const sectionCanvas = await html2canvas(sectionEl, {
+          scale: window.devicePixelRatio || 2,
+          scrollX: 0,
+          scrollY: 0,
+          width: sectionEl.scrollWidth,
+          height: sectionEl.scrollHeight,
+          windowWidth: sectionEl.scrollWidth,
+          windowHeight: sectionEl.scrollHeight,
+        });
+
+        // (b) 캔버스의 픽셀 크기를 PDF pt 단위로 환산
+        const imgProps = pdf.getImageProperties(sectionCanvas.toDataURL("image/png"));
+        // “이미지의 전체 픽셀 너비”가 PDF 페이지 너비(pageWidthPt)와 매핑되도록 비율 계산
+        const sectionWidthPx = sectionCanvas.width;
+        const sectionHeightPx = sectionCanvas.height;
+        const imgWidthPt = pageWidthPt;
+        const imgHeightPt = (sectionHeightPx * imgWidthPt) / sectionWidthPx;
+
+        // (c) 만약 이 섹션 전체 높이(imgHeightPt)가 페이지 남은 영역(remainingPt)보다 크다면,
+        //     - 페이지가 꽉 찼으므로 새 페이지를 추가하거나, 
+        //     - 섹션이 페이지 하나보다 더 클 경우, 내부를 페이지 단위로 잘라서 삽입
+        const remainingPt = pageHeightPt - currentYPt;
+        if (imgHeightPt <= remainingPt) {
+          // “한 페이지 안에 섹션 전체가 들어갈 수 있다” → 그냥 현재 페이지에 넣기
+          pdf.addImage(
+            sectionCanvas.toDataURL("image/png"),
+            "PNG",
+            0,
+            currentYPt, 
+            imgWidthPt,
+            imgHeightPt
+          );
+          currentYPt += imgHeightPt; // 그려넣은 만큼 Y 좌표 이동
+        } else {
+          // 페이지에 다 들어가지 않는 경우
+          if (imgHeightPt <= pageHeightPt) {
+            // (1) 페이지 한 장 분량보다 섹션 전체가 작음 → “현재 페이지가 꽉 찼으니” 새 페이지에서 삽입
+            pdf.addPage();
+            pdf.addImage(
+              sectionCanvas.toDataURL("image/png"),
+              "PNG",
+              0,
+              0, 
+              imgWidthPt,
+              imgHeightPt
+            );
+            currentYPt = imgHeightPt;
+          } else {
+            // (2) 섹션 자체가 한 페이지 높이보다 높음 → “섹션 내부를 또 나눠서” 페이지마다 삽입
+            //     (예: very long section) → 페이지 단위로 캔버스를 잘라내서 넣기
+
+            // 우선 현재 페이지가 비어 있지 않다면 “새 페이지”를 만듭니다.
+            if (currentYPt !== 0) {
+              pdf.addPage();
+              currentYPt = 0;
+            }
+
+            // 섹션을 “페이지 높이(pt)만큼씩” 잘라서 추가
+            const pxPerPt = sectionWidthPx / pageWidthPt;       // 1pt가 몇 px에 해당?
+            const pageHeightPx = pageHeightPt * pxPerPt;        // 한 페이지 높이(px)
+            const overlapPx = 20 * pxPerPt;                     // 오버랩: 20pt 정도 (줄 잘림 방지)
+            const effectivePagePx = pageHeightPx - overlapPx;
+            const totalSectionHeightPx = sectionHeightPx;
+            const numPagesForSection = Math.ceil(
+              (totalSectionHeightPx - overlapPx) / effectivePagePx
+            );
+
+            for (let p = 0; p < numPagesForSection; p++) {
+              // (i) 자를 영역 계산
+              const srcY = Math.floor(p * effectivePagePx);
+              const remainingPx = totalSectionHeightPx - srcY;
+              const sliceHeightPx = Math.min(pageHeightPx, remainingPx);
+
+              // (ii) 잘라낼 임시 캔버스 생성
+              const sliceCanvas = document.createElement("canvas");
+              sliceCanvas.width = sectionWidthPx;
+              sliceCanvas.height = sliceHeightPx;
+              const sliceCtx = sliceCanvas.getContext("2d");
+
+              // (iii) 원본 섹션 캔버스에서 Y=srcY부터 sliceHeightPx 만큼 복사
+              sliceCtx.drawImage(
+                sectionCanvas,
+                0,               // sx
+                srcY,            // sy
+                sectionWidthPx,  // sWidth
+                sliceHeightPx,   // sHeight
+                0,               // dx
+                0,               // dy
+                sectionWidthPx,  // dWidth
+                sliceHeightPx    // dHeight
+              );
+
+              // (iv) 첫 번째 페이지가 아니라면 새 페이지 추가
+              if (p > 0) pdf.addPage();
+
+              // (v) 잘라낸 캔버스를 PDF에 그리기
+              const sliceHeightPt = (sliceHeightPx * imgWidthPt) / sectionWidthPx;
+              pdf.addImage(
+                sliceCanvas.toDataURL("image/png"),
+                "PNG",
+                0,
+                0,
+                imgWidthPt,
+                sliceHeightPt
+              );
+
+              currentYPt = sliceHeightPt; // 현재 페이지에 그려진 높이(pt)
+            }
+          }
+        }
+      }
+
+      // 5) 모든 섹션을 추가한 뒤 PDF 저장
+      pdf.save("essays.pdf");
+    } catch (err) {
+      console.error("PDF 생성 중 오류 발생:", err);
+    } finally {
+      // 6) 스타일 원복
+      containerEl.style.overflow = origOverflow;
+      containerEl.style.maxHeight = origMaxHeight;
+      containerEl.style.height = origHeight;
+    }
+  };
+
 
   return (
     <div className="mypage-container">

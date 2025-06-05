@@ -58,7 +58,10 @@ const InputPage = () => {
       // 1. 자기소개서 생성 요청
       const response = await fetch('http://localhost:8000/essays/generate/full', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+         headers: { 
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(payload)
       });
 
