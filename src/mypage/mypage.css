@@ -76,8 +76,7 @@
 }
 
 .page-btn {
-  background: #d9d7ce;
-  color:#333;
+  background-color: #F2EBE5;
   border: 1px solid var(--accent-color);
   padding: 10px 15px;
   cursor: pointer;
@@ -85,8 +84,7 @@
 
 .page-btn.active,
 .page-btn:hover {
-  background: #4a90e2;
-  color: #fff;
+  background-color: #d9d7ce;
 }
 
 /* 사이드바 즐겨찾기 스타일링 */
@@ -322,6 +320,8 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  background: #4a90e2;
+  color: #fff;
   font-weight: 500;
   transition: background 0.2s;
 }
@@ -342,17 +342,6 @@
   align-items: center;
   justify-content: center;
 }
-
-/* 2) 팝업 컨테이너 박스 */
-/* .popup-container {
-  width: 500px;
-  max-width: 90%;
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  position: relative;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-} */
 
 .popup-container {
   /* 기존 width: 500px였던 것을 650px로 늘리고, 화면 크기에 따라 98%까지 허용 */
