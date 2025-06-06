@@ -31,6 +31,10 @@
   align-items: center;
 }
 
+.item-header{
+  padding: 0 15px;
+}
+
 .checkbox-container {
   margin-bottom: 10px;
 }
@@ -313,6 +317,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   padding :20px;
+  height: 23px;
 }
 
 .page-btn {
