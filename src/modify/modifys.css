@@ -2,27 +2,32 @@
 .modify-page {
     display: flex;
     width: 100%;
-    min-height: 100vh;
-  }
+    height: 100vh;       /* 뷰포트 전체 높이 */
+    overflow: hidden;    /* 외부 스크롤 방지 */
+}
   .compare-wrapper {
-    flex: 1;
-    display: flex;
-    gap: 32px;
-    padding: 40px;
-    box-sizing: border-box;
-  }
+    display: grid;
+  grid-template-columns: 1fr 1fr;   /* 50% | 50% */
+  gap: 32px;                        /* 패널 간격 */
+  padding: 40px;
+  box-sizing: border-box;
+  height: 100%;
+}
   .version-container {
-    flex: 1;
     background: #fff;
-    border: 1px solid #e0ddd6;
-    border-radius: 8px;
-    padding: 24px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    max-height: calc(100vh - 80px);
-    overflow-y: auto;
-  }
+  border: 1px solid #e0ddd6;
+  border-radius: 8px;
+  padding: 24px;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;        /* 부모(.compare-wrapper) 높이 꽉 채우기 */
+  overflow-y: auto;    /* 내부에서만 세로 스크롤 */
+  min-width: 0;        /* 긴 콘텐츠가 튀어나오지 않도록 */
+}
+
   .version-title {
     margin: 0 0 16px;
     font-size: 1.25rem;
@@ -37,20 +42,19 @@
   }
   
   /* 하단 선택 버튼 */
-  .select-bottom {
+.select-bottom {
     display: block;
     background: #f0ece3;
     color: #333;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     margin: 24px auto 0;
     padding: 10px 60px;
     border: none;
     border-radius: 8px;
-    font-size: 1.25rem;
     cursor: pointer;
     transition: background 0.2s ease;
-  }
-  .select-bottom:hover,
+}
+
   .select-bottom:hover {
     background: #e0ddd6;
   }
@@ -80,6 +84,13 @@
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #ddd;
+}
+
+/* 반응형: 화면 너비 800px 이하일 때 두 패널을 세로로 쌓음 */
+@media (max-width: 800px) {
+    .version-container {
+        flex: 1 1 100%;
+    }
 }
 
 
