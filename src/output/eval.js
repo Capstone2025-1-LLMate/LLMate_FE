@@ -28,7 +28,17 @@ const Evaluation = ({ evaluations = [] }) => {
             </div>
             <div className="bubble">
               <span className="reviewer-name">{reviewer}</span>
-              <p className="review-text">{text}</p>
+              {/* <p className="review-text">{text}</p> */}
+              {text
+                  .split('-')
+                  .filter(line => line.trim() !== '')
+                  .map((line, idx) => (
+                    <React.Fragment key={idx}>
+                      {/* 앞에 다시 "- " 추가 */}
+                      {'- ' + line.trim()}
+                      <br />
+                    </React.Fragment>
+                  ))}
             </div>
           </div>
         ))}
