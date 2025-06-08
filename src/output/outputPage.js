@@ -172,13 +172,19 @@ const OutputPage = () => {
         state: {
           original: {
             essayId: essay_id,
+            user_id:user_id,
             title: displayTitle,
+            essay_question_id:essay_question_id,
+            question:question,
             content: displayContent,
             evaluations: displayEvaluations,
           },
           edited: {
             essayId: newEssayId,
+            user_id:user_id,
             title: displayTitle,
+            essay_question_id:essay_question_id,
+            question:question,
             content: newContent,
             evaluations: newEvaluations,
           },

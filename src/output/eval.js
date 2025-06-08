@@ -29,16 +29,19 @@ const Evaluation = ({ evaluations = [] }) => {
             <div className="bubble">
               <span className="reviewer-name">{reviewer}</span>
               {/* <p className="review-text">{text}</p> */}
-              {text
-                  .split('-')
-                  .filter(line => line.trim() !== '')
-                  .map((line, idx) => (
+               {text
+                .split('\n')
+                .filter(line => line.trim() !== '')
+                .map((line, idx) => {
+                  const trimmed = line.trim();
+                  const prefix = trimmed.startsWith('-') || trimmed.startsWith('→') ? '' : '- ';
+                  return (
                     <React.Fragment key={idx}>
-                      {/* 앞에 다시 "- " 추가 */}
-                      {'- ' + line.trim()}
+                      {prefix + trimmed}
                       <br />
                     </React.Fragment>
-                  ))}
+                  );
+                })} 
             </div>
           </div>
         ))}
