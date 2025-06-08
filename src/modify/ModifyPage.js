@@ -21,7 +21,7 @@ const ModifyPage = () => {
     title: originalTitle,
     content: originalContent,
     evaluations: originalEvaluations = [],
-    question: originalQuestion = "",
+    question: originalQuestion
   } = original;
 
   // edited 버전: InputPage state 키와 동일하게 언패킹
@@ -32,7 +32,7 @@ const ModifyPage = () => {
     title: editedTitle,
     content: editedContent,
     evaluations: editedEvaluations = [],
-    question: editedQuestion = originalQuestion,
+    question: editedQuestion
   } = edited;
 
   // JWT 토큰
@@ -134,9 +134,6 @@ const ModifyPage = () => {
             {originalEvaluations.map((evalItem, idx) => (
               <Evaluation key={idx} evaluations={[evalItem]} />
             ))}
-            {originalQuestion && (
-              <Qna question={originalQuestion} answer={originalContent} readOnly />
-            )}
           </div>
           <button
             className="select-button"
@@ -166,9 +163,6 @@ const ModifyPage = () => {
             {editedEvaluations.map((evalItem, idx) => (
               <Evaluation key={idx} evaluations={[evalItem]} />
             ))}
-            {editedQuestion && (
-              <Qna question={editedQuestion} answer={editedContent} readOnly />
-            )}
           </div>
           <button
             className="select-button"
