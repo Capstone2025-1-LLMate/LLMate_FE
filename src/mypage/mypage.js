@@ -323,7 +323,6 @@ const handlePDF = async () => {
                 <div className="item-header">
                   <span className="company">{essay.essay_question.company_name}</span>
                   <span className="position">{` (${essay.essay_question.job_position})`}</span>
-                  {essay.isRevision && <span className="revision-badge">수정중</span>}
                 </div>
                 <div className="question">{essay.essay_question.question}</div>
                 {/* <div className="content-text">{essay.content}</div> */}
