@@ -18,7 +18,6 @@ export default function MyPage() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupEssayData, setPopupEssayData] = useState(null);
 
-
   const token = localStorage.getItem("access_token");
   const navigate = useNavigate();
 
@@ -43,6 +42,10 @@ export default function MyPage() {
           },
         });
         const data = await res.json();
+        if (Array.isArray(data)) {
+        // created_at 기준 내림차순 정렬
+          data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        }
         setEssays(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("자소서 불러오기 실패:", error);
@@ -336,7 +339,7 @@ const handlePDF = async () => {
           {Array.from({ length: totalPages }, (_, i) => (
             <button
               key={i}
-              className={`page-btn ${currentPage === i + 1 ? "active" : ""}`}
+              className={`page-btn ${currentPage === i + 1 ? "" : "active"}`}
               onClick={() => handlePageChange(i + 1)}
             >
               {i + 1}
