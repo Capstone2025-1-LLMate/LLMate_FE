@@ -34,7 +34,7 @@ const GoogleLoginBtn = () => {
         localStorage.setItem("access_token", data.access_token);
         localStorage.setItem("user_name", data.name);
 
-        navigate("/input");
+        navigate("/input2");
       } catch (err) {
         console.error("로그인 중 에러 발생:", err);
       }
