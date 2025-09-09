@@ -1,60 +1,139 @@
 /* src/Login/login.css */
 
-/* ──────────────────────────────────────────────────────
-   1) LoginPage.js에서 사용되는 스타일
-────────────────────────────────────────────────────── */
-.login-page-container {
-  max-width: 400px;
-  margin: 100px auto;
-  padding: 2rem;
-  border: 2px solid #5984B0;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+/* 랜딩과 통일된 컬러 시스템 */
+:root {
+  --primary: #1f2d5d;   /* 딥블루 */
+  --accent:  #29c2b1;   /* 민트 */
+  --text:    #111;
+  --muted:   #666;
+  --radius:  16px;
+  --container: 1200px;
+  --gap: 24px;
+}
+
+/* 페이지 배경 */
+.login-hero {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background-image:
+    linear-gradient(rgba(31,45,93,.65), rgba(31,45,93,.65)),
+    url("../asset/hero.jpg");
+  background-size: cover;
+  background-position: center;
+  padding: 40px 16px;
+}
+
+/* 중앙 카드 */
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+  padding: 28px;
+}
+
+/* 제목/부제 */
+.login-title {
+  margin: 0 0 16px;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--primary);
+  text-align: center;
+}
+.login-subtitle {
+  margin: 0 0 20px;
+  font-size: 14px;
+  color: var(--muted);
   text-align: center;
 }
 
-/* ──────────────────────────────────────────────────────
-   2) LoginComponent.js에서 사용되는 스타일
-────────────────────────────────────────────────────── */
+/* 폼 */
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
+  gap: 14px;
 }
 
+/* 인풋 */
 .login-input {
-  padding: 0.75rem;
-  font-size: 1rem;
-  border: 1px solid #5984B0;
-  border-radius: 4px;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  outline: none;
+}
+.login-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(41,194,177,0.15);
 }
 
-.login-button {
-  padding: 0.75rem;
-  background-color: #F2EBE5;
-  border: 1px solid #5984B0;
-  font-weight: bold;
+/* 버튼 공통 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-weight: 700;
+  border-radius: 10px;
+  height: 44px;
+  padding: 0 16px;
+  transition: filter .15s ease, transform .02s ease;
   cursor: pointer;
-}
-
-/* ──────────────────────────────────────────────────────
-   3) GoogleLoginBtn (googlelogin_component.js)에서 사용되는 스타일
-────────────────────────────────────────────────────── */
-.google-login-btn {
-  width: 400px;
-  height: 50px;
-  border-radius: 5px;
-  background-color: #4285F4;
-  color: #fff;
-  font-size: 16px;
   border: none;
-  cursor: pointer;
+  /* ▶ 요구사항: 로그인 버튼 크기에 맞춰 고정 폭 */
+  width: 160px;
 }
 
-/* ──────────────────────────────────────────────────────
-   4) 기타 유틸리티(텍스트 중앙 정렬 등)
-────────────────────────────────────────────────────── */
-.text-center {
-  text-align: center;
+/* Primary / Ghost */
+.btn--primary { background: var(--accent); color: #fff; }
+.btn--primary:hover { filter: brightness(0.97); }
+.btn--primary:active { transform: translateY(1px); }
+
+.btn--ghost { background: #f3f7f7; color: var(--primary); border: 1px solid #e6eff0; }
+.btn--ghost:hover { filter: brightness(0.98); }
+.btn--ghost:active { transform: translateY(1px); }
+
+/* ▶ 요구사항: 같은 가로열 중앙 정렬 */
+.login-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+/* 구분선 */
+.login-sep {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0;
+  color: #9aa3ab;
+  font-size: 12px;
+}
+.login-sep::before,
+.login-sep::after {
+  content: "";
+  height: 1px;
+  background: #e5e7eb;
+}
+
+
+/* 하단 링크 */
+.login-meta {
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+}
+.login-link { color: var(--accent); text-decoration: none; }
+.login-link:hover { text-decoration: underline; }
+
+/* 반응형 */
+@media (max-width: 480px) {
+  .btn { width: 100%; }            /* 모바일에서는 두 버튼이 아래로 접혀 꽉 차도록 */
+  .login-actions { flex-direction: column; }
 }
