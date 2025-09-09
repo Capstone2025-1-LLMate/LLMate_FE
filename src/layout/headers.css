@@ -1,0 +1,63 @@
+/* src/layout/headers.css */
+
+.site-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid #e9ecef;
+  margin-bottom: 30px;
+  background-color: #ffffff;
+}
+
+.header-content {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 15px; /* Add some padding for smaller screens */
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: baseline;
+  cursor: pointer;
+}
+
+.logo-main {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.logo-sub {
+  font-size: 1rem;
+  color: #555;
+  margin-left: 12px;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.mypage-button,
+.logout-button {
+  background-color: #20c997;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.logout-button {
+  background-color: transparent;
+  color: #495057;
+  border: 1px solid #ced4da;
+}

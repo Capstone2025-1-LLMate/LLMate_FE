@@ -22,6 +22,30 @@ const InputPage = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const [qnaList, setQnaList] = useState([
+    { id: 1, len: 600, value: '' }
+  ]);
+    const addQna = () => {
+    setQnaList([...qnaList, { id: qnaList.length + 1, len: 600, value: '' }]);
+  };
+
+  const handleLenChange = (id, e) => {
+    const newLen = parseInt(e.target.value) || 0;
+    setQnaList(
+      qnaList.map(item =>
+        item.id === id ? { ...item, len: newLen } : item
+      )
+    );
+  };
+
+  const handleQnaChange = (id, e) => {
+    setQnaList(
+      qnaList.map(item =>
+        item.id === id ? { ...item, value: e.target.value } : item
+      )
+    );
+  };
+
   const handleSubmit = async () => {
 
     const token = localStorage.getItem("access_token");
@@ -43,7 +67,6 @@ const InputPage = () => {
     if (weakness.trim() !== '') {
       experiences.push({ type: 'weakness', content: weakness });
     }
-
     const payload = {
       question: {
         company_name: company,
@@ -132,6 +155,8 @@ const InputPage = () => {
     }
   };
 
+
+
   return (
     <div className="input-page-container">
       {/* <LayoutAside hideText={true} /> */}
@@ -158,7 +183,7 @@ const InputPage = () => {
           </label>
         </div>
 
-        <div className="section">
+        {/* <div className="section">
           <h3>자기소개서 질문 문항 <span className="required">*</span></h3>
           <label>
             글자수 제한:
@@ -176,8 +201,34 @@ const InputPage = () => {
             value={questionText}
             onChange={(e) => setQuestionText(e.target.value)}
           />
+        </div> */}
+        
+        <div className="section">
+          <h3>자기소개서 질문 문항 <span className="required">*</span></h3>
+          {qnaList.map(item => (
+            <div key={item.id} className="qna-block">
+              <div className="qna-meta">
+                <label>
+                  글자수 제한:
+                  <input
+                    type="text"
+                    className="len-input"
+                    value={item.len}
+                    onChange={e => handleLenChange(item.id, e)}
+                  />
+                </label>
+              </div>
+              <textarea
+                className="qna-input"
+                placeholder="예) 본인의 역량이 회사와 직무에 어떻게 기여할 수 있는지 서술하세요."
+                maxLength={item.len}
+                value={item.value}
+                onChange={e => handleQnaChange(item.id, e)}
+              />
+            </div>
+          ))}
+          <div className="add-qna" onClick={addQna}>+ 추가하기</div>
         </div>
-
         <div className="section">
           <h3>경험 및 활동 <span className="required">*</span></h3>
           <textarea
