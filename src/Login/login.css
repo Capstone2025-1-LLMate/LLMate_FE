@@ -82,7 +82,6 @@
   transition: filter .15s ease, transform .02s ease;
   cursor: pointer;
   border: none;
-  /* ▶ 요구사항: 로그인 버튼 크기에 맞춰 고정 폭 */
   width: 160px;
 }
 

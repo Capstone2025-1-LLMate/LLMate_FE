@@ -1,408 +1,123 @@
-:root {
-  --sidebar-width: 240px;
-  --sidebar-bg: #f2e9dd;
-  --accent-color: #5984B0;
-  --highlight-bg: #ffffff;
+/* ===== 색상 토큰 ===== */
+:root{
+  --sb-width: 260px;
+  --sb-bg: #2e3f63;
+  --sb-text: #eaf2ff;
+  --sb-muted: #c8d4eb;
+  --cta: #14b8a6;
+  --cta-hover: #0ea89a;
+  --divider: #dfe5ee;
+  --title: #22324d;
+  --page-bg: #ffffff;
+
+  --exp-card-border: #d9dde7;
+  --exp-badge: #34d399;
+  --exp-save: #63a8ff;
+  --exp-save-hover: #4f8ee1;
+  --exp-add: #6b7280;
+  --mint: #14b8a6; /* 체크박스 색 */
 }
 
-.mypage-container {
-  display: flex;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
+/* ===== 레이아웃 공통 ===== */
+.mypage-root{ background: var(--page-bg); min-height: 100vh; }
+.fixed-sidebar{
+  position: fixed; top: 92px; bottom: 24px; left: 24px; width: var(--sb-width);
+  background: var(--sb-bg); color: var(--sb-text); border-radius: 16px;
+  padding: 20px 16px 76px; box-shadow: 0 8px 24px rgba(0,0,0,.15); display:flex; flex-direction:column;
 }
+.sb-profile{ display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
+.sb-avatar{ width:84px; height:84px; border-radius:50%; background: linear-gradient(180deg,#cfd8ea,#aab6cf); }
+.sb-name{ font-weight:800; font-size:18px; margin-top:8px; }
+.sb-nav{ display:flex; flex-direction:column; gap:10px; margin-top:10px; }
+.sb-nav-item{ text-align:left; background:transparent; border:none; color: var(--sb-text); padding:12px 10px; border-radius:10px; cursor:pointer; font-weight:700; }
+.sb-nav-item:hover{ background: rgba(255,255,255,.07); }
+.sb-nav-item.active{ background: rgba(255,255,255,.12); }
+.sb-footer{ position:absolute; left:16px; right:16px; bottom:16px; }
+.sb-cta{ width:100%; height:44px; border:none; border-radius:10px; background: var(--cta); color:#003a37; font-weight:800; cursor:pointer; }
+.sb-cta:hover{ background: var(--cta-hover); }
 
-.content {
-  padding: 20px;
-  overflow-y: auto;
-  flex: 1;
+.mypage-content{ margin-left: calc(var(--sb-width) + 48px); padding: 40px 32px 48px; }
+
+/* ===== 자소서 헤더/액션 ===== */
+.mypage-header{ display:flex; align-items:center; justify-content:space-between; padding: 4px 4px 12px 4px; border-bottom: 1px solid var(--divider); }
+.mypage-title{ margin:0; font-size:28px; font-weight:800; color: var(--title); }
+.mypage-actions{ display:flex; align-items:center; gap:12px; }
+.icon-btn{ background:none; border:none; padding:4px; cursor:pointer; display:grid; place-items:center; }
+.icon-btn img{ width:28px; height:28px; }
+.icon-btn:disabled{ opacity:.4; cursor:not-allowed; }
+
+/* ===== 페이지네이션 샘플 ===== */
+.mp-pagination{ display:flex; justify-content:center; gap:12px; padding:24px 0; color:#6b7280; }
+.mp-pagination .current{ color:#111827; font-weight:700; }
+
+/* ===== 내 경험 ===== */
+.exp-header{ margin-bottom: 14px; }
+.exp-title{ margin:0 0 4px 0; font-size:28px; font-weight:800; color: var(--title); }
+.exp-tip{ margin:0; color:#5b6474; font-weight:700; }
+
+.exp-card{
+  width: 100%; max-width: 980px; background:#fff; border:1px solid var(--exp-card-border);
+  border-radius: 8px; padding: 14px 16px; box-shadow: 0 2px 8px rgba(0,0,0,.04);
 }
+.exp-card + .exp-card{ margin-top: 12px; }
 
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  justify-items: center;
+/* 카드 상단: 좌(체크박스+뱃지) / 우(저장/삭제) */
+.exp-card-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.exp-left{ display:flex; align-items:center; gap:8px; }
+.exp-badge{ display:inline-grid; place-items:center; width:16px; height:16px; border-radius:4px; background: var(--exp-badge); color:#fff; font-weight:800; font-size:12px; }
+
+/* ✅ 민트 체크박스 (이미지 없이) */
+.exp-use{
+  width: 18px; height: 18px; cursor: pointer;
+  accent-color: var(--mint); /* 최신 브라우저 */
 }
+/* (옵션) 아주 구형 브라우저에서는 기본 색으로 보일 수 있음 */
 
-.item-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.exp-actions{ display:flex; align-items:center; gap:10px; }
+.exp-save-btn{ padding: 6px 12px; background: var(--exp-save); color: #ffffff; font-weight:800; border:none; border-radius:8px; cursor:pointer; }
+.exp-save-btn:hover{ background: var(--exp-save-hover); }
+.exp-del-btn{ background:transparent; border:none; padding:0 2px; cursor:pointer; }
+.exp-del-btn img{ width:22px; height:22px; }
+
+.exp-body{ margin-top:10px; color:#2b3443; font-size:13px; }
+.exp-line{ margin: 4px 0; }
+
+/* 체크 해제된 경험은 살짝 흐리게 */
+.exp-disabled{ opacity:.65; }
+
+.exp-add-link{ margin-top: 10px; display:inline-block; background:transparent; border:none; color: var(--exp-add); cursor:pointer; font-weight:700; }
+
+/* 추가 폼 */
+.exp-add-form{
+  width: 100%; max-width: 980px; background:#fff; border:1px dashed var(--exp-card-border);
+  border-radius: 8px; padding: 14px 16px; margin-top: 10px;
 }
+.exp-add-form .row{ display:flex; gap:12px; align-items:center; margin:8px 0; }
+.exp-add-form label{ width:80px; color:#4b5563; }
+.exp-add-form input, .exp-add-form textarea{ flex:1; border:1px solid #d1d5db; border-radius:8px; padding:10px; font-size:14px; outline:none; }
+.exp-add-form textarea{ min-height:120px; resize:vertical; }
+.form-actions{ display:flex; gap:10px; justify-content:flex-end; margin-top: 8px; }
+.exp-cancel-btn{ padding: 6px 12px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer; }
+.exp-save-btn:disabled{ opacity:.5; cursor:not-allowed; }
 
-.item-header{
-  padding: 0 15px;
-}
+/* ===== 모달/팝업 ===== */
+.modal-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.7); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:2000; }
+.modal-content{ background:#fff; border-radius:12px; padding:24px; width:98%; max-width:1200px; max-height:90vh; overflow-y:auto; box-shadow:0 10px 30px rgba(0,0,0,.25); position:relative; }
+.modal-actions{ margin-top:20px; display:flex; justify-content:flex-end; gap:14px; }
+.modal-actions .page-btn{ padding:12px 20px; border:none; border-radius:6px; cursor:pointer; background:#5984B0; color:#fff; font-weight:600; font-size:1rem; transition:background .2s, transform .1s; }
+.pdf-section{ background:#f9f9f9; border:1px solid #e0e0e0; border-radius:8px; padding:16px; margin-bottom:20px; }
 
-.checkbox-container {
-  margin-bottom: 10px;
-}
+/* 미리보기 팝업 */
+.popup-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:999; display:flex; align-items:center; justify-content:center; }
+.popup-container{ width:650px; max-width:98%; max-height:90vh; background:#fff; border-radius:8px; padding:24px; position:relative; box-shadow:0 5px 20px rgba(0,0,0,.3); overflow-y:auto; }
+.popup-close{ position:absolute; top:10px; right:14px; background:transparent; border:none; font-size:1.5rem; cursor:pointer; }
+.popup-title{ margin:0 0 16px; font-size:1.5rem; color:#333; }
+.popup-question{ margin-bottom:14px; font-weight:bold; color:#555; font-size:1.1rem; }
+.popup-answer{ margin-bottom:16px; line-height:1.6; color:#444; white-space:pre-wrap; font-size:1rem; }
+.popup-footer{ font-size:.9rem; color:#777; text-align:right; }
 
-.checkbox-container input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-}
-
-.item-card {
-  width: 200px;
-  height: 200px;
-  background-color: #F2EBE5;
-  border: 2px solid var(--accent-color);
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.item-card:hover {
-  background-color: #e0ddd6;
-}
-
-.note-icon {
-  font-size: 40px;
-  margin-bottom: 10px;
-}
-
-.item-title {
-  font-size: 18px;
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.page-btn {
-  background-color: #F2EBE5;
-  border: 1px solid var(--accent-color);
-  padding: 10px 15px;
-  cursor: pointer;
-}
-
-.page-btn.active,
-.page-btn:hover {
-  background-color: #d9d7ce;
-}
-
-/* 사이드바 즐겨찾기 스타일링 */
-.pinned-section {
-  padding: 10px;
-  background-color: var(--highlight-bg);
-  border-radius: 8px;
-  margin-bottom: 20px;
-}
-
-.pinned-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding-bottom: 10px;
-}
-
-.star-icon {
-  font-size: 18px;
-  color: var(--accent-color);
-}
-
-.section-title {
-  font-size: 18px;
-  font-weight: bold;
-  color: #333;
-}
-
-.divider {
-  width: 100%;
-  height: 1px;
-  background-color: #ccc;
-  margin-bottom: 10px;
-}
-
-.pinned-list {
-  background-color: #ffffff;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  max-height: 150px;
-  overflow-y: auto;
-}
-
-.pinned-item {
-  padding: 5px 10px;
-  background-color: #fafafa;
-  margin-bottom: 5px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.pinned-item:hover {
-  background-color: #eaeaea;
-}
-
-.no-pinned {
-  color: #888;
-  text-align: center;
-  padding: 10px 0;
-}
-
-.sidebar-footer {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  right: 10px;
-  display: flex;
-  gap: 10px;
-}
-
-.sidebar-btn {
-  flex: 1;
-  padding: 16px;
-  background-color: #5984B0;  /* 지정된 색상 */
-  color: #ffffff;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;  /* 텍스트 크기 증가 */
-  font-weight: bold;
-  border-radius: 8px;
-  transition: background-color 0.3s, transform 0.2s;
-}
-
-.sidebar-btn:hover {
-  background-color: #476b8f;
-  transform: scale(1.02);
-}
-
-.sidebar-btn:active {
-  background-color: #355075;
-  transform: scale(0.98);
-}
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.7); /* 좀 더 짙은 반투명 */
-  display: flex;
-  flex-direction: column;   
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-}
-
-.modal-content::before {
-  content: "이력서";
-  display: block;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 16px;
-  text-align: center;
-}
-
-.modal-content {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 24px;
-  /* 너비를 좀 더 넓게: 화면 전체 너비의 98%까지 허용 */
-  width: 98%;
-  /* 최대 너비를 1000px → 1200px로 확대 */
-  max-width: 1200px;
-  /* 최대 높이를 화면의 90%까지 허용 */
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-  position: relative;
-}
-
-.modal-actions {
-  margin-top: 20px; /* 버튼과 콘텐츠 간격 좀 늘림 */
-  display: flex;
-  justify-content: flex-end;
-  gap: 14px;       /* 버튼 사이 간격 살짝 늘림 */
-}
-
-/* 버튼 공통 스타일 */
-.modal-actions .page-btn {
-  padding: 12px 20px; /* 버튼 패딩 살짝 늘려 클릭 영역 확보 */
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  background: #5984B0;
-  color: #fff;
-  font-weight: 600;
-  font-size: 1rem;    /* 버튼 폰트 유지 */
-  transition: background 0.2s, transform 0.1s;
-}
-
-.modal-actions .page-btn:hover {
-  background: #476b8f;
-  transform: scale(1.02);
-}
-
-.modal-actions .page-btn:active {
-  background: #355075;
-  transform: scale(0.98);
-}
-
-.modal-content::-webkit-scrollbar-track,
-.popup-container::-webkit-scrollbar-track {
-  background: #f0f0f0;
-  border-radius: 4px;
-}
-
-.modal-content::-webkit-scrollbar-thumb,
-.popup-container::-webkit-scrollbar-thumb {
-  background-color: #ccc;
-  border-radius: 4px;
-}
-
-.modal-content::-webkit-scrollbar-thumb:hover,
-.popup-container::-webkit-scrollbar-thumb:hover {
-  background-color: #aaa;
-}
-
-.pdf-section {
-  background-color: #f9f9f9; /* 연한 회색 배경 */
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 20px;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-/* 섹션 호버 시 살짝 강조 */
-.pdf-section:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.pdf-question {
-  font-weight: 600;
-  font-size: 1.1rem;
-  margin-bottom: 8px;
-  color: #444;
-}
-
-/* 답변(내용) 스타일 */
-.pdf-answer {
-  white-space: pre-wrap;
-  line-height: 1.6;
-  color: #555;
-  margin-bottom: 12px;
-}
-
-.pdf-section hr {
-  border: none;
-  border-top: 1px solid #ddd;
-  margin-top: 12px;
-}
-
-.question {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding :20px;
-  height: 23px;
-}
-
-.page-btn {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  background: #4a90e2;
-  color: #fff;
-  font-weight: 500;
-  transition: background 0.2s;
-}
-
-.page-btn:hover {
-  background: #357abd;
-}
-
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999; /* 레이어를 최상위로 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.popup-container {
-  /* 기존 width: 500px였던 것을 650px로 늘리고, 화면 크기에 따라 98%까지 허용 */
-  width: 650px;
-  max-width: 98%;
-  /* 높이도 글이 길어질 경우를 대비해 최대 90vh까지 허용 */
-  max-height: 90vh;
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 24px; /* 패딩을 기존 20px → 24px로 살짝 늘려 여유를 줌 */
-  position: relative;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-  overflow-y: auto;
-}
-.popup-container {
-  overflow-y: auto;
-}
-
-
-/* 3) 닫기 버튼 (오른쪽 상단) */
-.popup-close {
-  position: absolute;
-  top: 10px;
-  right: 14px;
-  background: transparent;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-/* 4) 팝업 제목 */
-.popup-title {
-  margin: 0;
-  margin-bottom: 16px; /* 간격 약간 늘림 */
-  font-size: 1.5rem;   /* 폰트 크기 살짝 키움 */
-  color: #333;
-}
-
-/* 5) 질문 텍스트 */
-.popup-question {
-  margin-bottom: 14px; /* 간격 살짝 늘림 */
-  font-weight: bold;
-  color: #555;
-  font-size: 1.1rem;   /* 폰트 크기 살짝 키움 */
-}
-
-/* 6) 답변(자기소개서 본문) */
-.popup-answer {
-  margin-bottom: 16px; /* 여유 공간 추가 */
-  line-height: 1.6;
-  color: #444;
-  white-space: pre-wrap;
-  font-size: 1rem;     /* 약간 키운 기본 폰트 */
-}
-
-
-/* 7) 작성일 등 푸터 정보 */
-.popup-footer {
-  font-size: 0.9rem;
-  color: #777;
-  text-align: right;
+/* 반응형 */
+@media (max-width: 980px){
+  .fixed-sidebar{ left: 12px; right: 12px; width: calc(100% - 24px); top: 72px; bottom: auto; }
+  .mypage-content{ margin-left: 0; margin-top: 220px; padding: 20px 16px 32px; }
 }
