@@ -33,7 +33,7 @@
     height: 80px;
 }
   .bubble {
-    background: #f0ece3;
+    background: #f7fbff;
     padding: 30px 32px;
     border-radius: 12px;
     position: relative;
@@ -48,7 +48,7 @@
     height: 0;
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
-    border-right: 8px solid #f0ece3;
+    border-right: 8px solid #f7fbff;
   }
   .reviewer-name {
     display: block;
