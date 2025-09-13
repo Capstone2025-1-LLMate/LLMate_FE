@@ -1,98 +1,112 @@
-/* src/components/ModifyPage.css */
-.modify-page {
-    display: flex;
-    width: 100%;
-    height: 100vh;       /* 뷰포트 전체 높이 */
-    overflow: hidden;    /* 외부 스크롤 방지 */
-}
-  .compare-wrapper {
-    display: grid;
-  grid-template-columns: 1fr 1fr;   /* 50% | 50% */
-  gap: 32px;                        /* 패널 간격 */
-  padding: 40px;
-  box-sizing: border-box;
-  height: 100%;
-}
-  .version-container {
-    background: #fff;
-  border: 1px solid #e0ddd6;
-  border-radius: 8px;
-  padding: 24px;
-  box-sizing: border-box;
+/* modifys.css */
+@import url('../output/eval.css');
 
+.modify-page-layout {
   display: flex;
   flex-direction: column;
-
-  height: 100%;        /* 부모(.compare-wrapper) 높이 꽉 채우기 */
-  overflow-y: auto;    /* 내부에서만 세로 스크롤 */
-  min-width: 0;        /* 긴 콘텐츠가 튀어나오지 않도록 */
+  height: 100vh;
+  background-color: #f8f9fa; /* Light gray background for the page */
 }
 
-  .version-title {
-    margin: 0 0 16px;
-    font-size: 1.25rem;
-    color: #4b6cab;
-    border-left: 4px solid #4b6cab;
-    padding-left: 12px;
-  }
-  .content-block {
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-  }
-  
-  /* 하단 선택 버튼 */
-.select-bottom {
-    display: block;
-    background: #f0ece3;
-    color: #333;
-    font-size: 1.25rem;
-    margin: 24px auto 0;
-    padding: 10px 60px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-
-  .select-bottom:hover {
-    background: #e0ddd6;
-  }
-
-  .llm-feedback-section {
-  margin-top: 20px;
-  padding: 10px;
-  border-top: 1px solid #ccc;
-}
-
-.llm-feedback {
+.comparison-container {
   display: flex;
-  align-items: flex-start;
-  margin-bottom: 12px;
-}
-
-.llm-logo img {
-  width: 50px;
-  height: 50px;
-  object-fit: contain;
-  margin-right: 15px;
-}
-
-.llm-textbox {
   flex: 1;
-  background-color: #f9f9f9;
-  padding: 10px;
+  padding: 20px 40px 40px 40px; /* Add bottom padding */
+  gap: 40px;
+  /* overflow: hidden; */
+}
+
+.version-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+  overflow: hidden;
+  position: relative; /* For footer positioning */
+}
+
+.version-column:first-child {
+  /* This creates the dividing line */
+  border-right: 1px solid #dee2e6;
+}
+
+.version-content {
+  padding: 30px;
+  overflow-y: auto; /* Enable scrolling for content */
+  flex: 1; /* Takes up available space, pushing footer down */
+}
+
+.version-question {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.essay-box {
+  border: 1px solid #ced4da;
   border-radius: 8px;
-  border: 1px solid #ddd;
+  padding: 20px;
+  margin-bottom: 30px;
 }
 
-/* 반응형: 화면 너비 800px 이하일 때 두 패널을 세로로 쌓음 */
-@media (max-width: 800px) {
-    .version-container {
-        flex: 1 1 100%;
-    }
+.essay-title {
+  font-weight: bold;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+  color: #343a40;
 }
 
+.essay-text {
+  white-space: pre-wrap;
+  line-height: 1.7;
+  color: #495057;
+}
 
-  /* 각 섹션 내부 QnA와 Evaluation 간 유사한 간격 확보 */
-  
+.evaluation-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Adjust the gap value as needed */
+}
+
+.evaluation-header {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #343a40;
+  border-left: 4px solid #20c997; /* Accent color from the image */
+  padding-left: 12px;
+  margin-bottom: 20px;
+}
+
+.version-footer {
+  padding: 20px;
+  border-top: 1px solid #e9ecef;
+  background-color: #fff; /* Ensure footer has a solid background */
+}
+
+.save-button {
+  display: block;
+  width: 150px;
+  margin: 0 auto;
+  padding: 15px;
+  background-color: #20c997; /* Green color from the image */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.save-button:hover:not(:disabled) {
+  background-color: #1baa80; /* Darker green on hover */
+}
+
+.save-button:disabled {
+  background-color: #adb5bd;
+  cursor: not-allowed;
+}

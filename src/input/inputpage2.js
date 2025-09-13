@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './inputpage2.css';
 import Header from '../layout/headers';
+import { authFetch} from '../utils/authFetch';
 const Spinner = () => <div className="spinner" />;
 
 // Mock data to simulate fetched user experiences
@@ -69,12 +70,6 @@ const InputPage2 = () => {
   };
 
   const handleSubmit = async () => {
-    const token = localStorage.getItem("access_token");
-    if (!token) {
-      navigate("/login");
-      return;
-    }
-
     setIsLoading(true);
 
     const selectedExperiences = userExperiences
@@ -99,12 +94,8 @@ const InputPage2 = () => {
     };
 
     try {
-      const response = await fetch('http://localhost:8000/essays/generate/full2', {
+      const response = await authFetch('http://localhost:8000/essays/generate/full2', {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify(payload)
       });
 
@@ -116,6 +107,7 @@ const InputPage2 = () => {
       navigate('/output2', { state: { ...result, company_name: company, job_position: position } });
 
     } catch (err) {
+      // authFetch handles 401, this will catch other network or server errors.
       console.error('Failed to generate essay:', err);
     } finally {
       setIsLoading(false);

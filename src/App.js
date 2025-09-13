@@ -9,6 +9,7 @@ import ModifyPage from './modify/modifypage';
 import LandingPage from './landing/landingpage';
 import InputPage2 from "./input/inputpage2";
 import OutputPage2 from "./output/outputpage2";
+import ModifyPage2 from "./modify/modifypage2";
 import './App.css';
 
 function App() {
@@ -25,7 +26,7 @@ function App() {
           <Route path="/landingpage" element={<LandingPage />} />
           <Route path="/input2" element={<InputPage2 />} />
           <Route path="/output2" element={<OutputPage2 />} />
-
+          <Route path="/modify2" element={<ModifyPage2/>} />
         </Routes>
         {/* <OutputPage /> */}
         {/* <InputPage/> */}  

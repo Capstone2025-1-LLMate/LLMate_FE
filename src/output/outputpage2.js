@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '../layout/headers';
 import Evaluation from "./eval";
 import './outputpage2.css';
+import { authFetch } from '../utils/authFetch';
 
 const Spinner = () => <div className="spinner" />;
 
@@ -80,13 +81,6 @@ const OutputPage2 = () => {
   };
 
   const handleSubmitModify = async () => {
-    const token = localStorage.getItem("access_token");
-    if (!token) {
-      alert("로그인 정보가 없습니다. 다시 로그인해주세요.");
-      navigate("/login");
-      return;
-    }
-
     if (!editRequest.trim()) {
       alert("수정 요청 내용을 입력해주세요.");
       return;
@@ -107,14 +101,10 @@ const OutputPage2 = () => {
 
     try {
       // 1. Send revision request
-      await fetch(
+      await authFetch(
         `http://localhost:8000/revision/${selectedEssay.id}`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
           body: JSON.stringify({
             user_id: selectedEssay.user_id,
             revision: editRequest.trim(),
@@ -123,14 +113,10 @@ const OutputPage2 = () => {
       );
 
       // 2. Fetch revised essay
-      const essayRes = await fetch(
+      const essayRes = await authFetch(
         `http://localhost:8000/revisions/${selectedEssay.id}`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
           body: JSON.stringify({
             user_id: selectedEssay.user_id,
             essay_question_id: selectedEssay.essay_question_id,
@@ -144,17 +130,12 @@ const OutputPage2 = () => {
       const newContent = essayData.content;
 
       // 3. Fetch AI feedback for the new essay
-      const feedbackRes = await fetch(
+      const feedbackRes = await authFetch(
         "http://localhost:8000/api/feedbacks/multi",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
           body: JSON.stringify({
             essay_id: newEssayId,
-            prompt_style: "강점과 약점을 구분해서 평가해줘",
           }),
         }
       );
@@ -162,33 +143,31 @@ const OutputPage2 = () => {
       if (!feedbackRes.ok) throw new Error("Failed to fetch feedback");
       const feedbackData = await feedbackRes.json();
 
-      const modelMap = {
-        "gpt-4o-mini": "ChatGPT",
-        gemini: "Gemini",
-        claude: "Claude",
-        Perplexity: "Gemini",
-      };
+      const newEvaluations = feedbackData.feedbacks || [];
 
-      const newEvaluations = (feedbackData.feedbacks || []).map((fb, idx) => ({
-        id: idx + 1,
-        reviewer: modelMap[fb.llm_model] || fb.llm_model,
-        text: fb.feedback_text,
-      }));
-
-      // 4. Navigate to ModifyPage with original and edited data
-      navigate("/modify", {
+      // 4. Navigate to ModifyPage2 with original and edited data
+      navigate("/modify2", {
         state: {
           original: { ...selectedEssay, essayId: selectedEssay.id },
           edited: {
-            ...selectedEssay,
+            // Reconstruct the edited object cleanly
+            question: selectedEssay.question, // Keep original question
+            title: selectedEssay.title, // Pass the title
             id: newEssayId,
             essayId: newEssayId,
             content: newContent,
             evaluations: newEvaluations,
+            user_id: selectedEssay.user_id,
+            essay_question_id: selectedEssay.essay_question_id,
           },
+          // Pass the full context needed to return to this page
+          allEssays: essays,
+          company_name: company,
+          job_position: position,
         },
       });
     } catch (err) {
+      // authFetch handles 401, this will catch other network or server errors.
       console.error("Modification request error:", err);
       setError(err.message || "An error occurred during the modification request.");
     } finally {
@@ -240,11 +219,14 @@ const OutputPage2 = () => {
               <div className="essay-content-section">
                 <h2 className="essay-question">{selectedEssay.question}</h2>
                 <p className="essay-body">
+                  <span style={{fontWeight : "bold"}}>{selectedEssay.title}</span>
+                  <br />
                   {selectedEssay.content.split('\n').map((line, index) => (
-                    <React.Fragment key={index}>{line}<br /></React.Fragment>
+                    <React.Fragment key={index}>{line}</React.Fragment>
                   ))}
                 </p>
               </div>
+              <h2 className="evaluation-title">평가</h2>
               <Evaluation evaluations={selectedEssay.evaluations} />
               
               {!isEditing ? (

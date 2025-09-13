@@ -20,8 +20,6 @@ const Evaluation = ({ evaluations = [] }) => {
 
   return (
     <div className="evaluation-container">
-      <h2 className="evaluation-title">평가</h2>
-
       <div className="evaluation-list">
         {evaluations.map(({ feedback_id, llm_model, feedback_text }) => {
           const reviewerName = modelMap[llm_model] || llm_model;
