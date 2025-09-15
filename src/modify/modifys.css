@@ -11,7 +11,7 @@
 .comparison-container {
   display: flex;
   flex: 1;
-  padding: 20px 40px 40px 40px; /* Add bottom padding */
+  padding: 0px 80px 40px 80px; /* Add bottom padding */
   gap: 40px;
   /* overflow: hidden; */
 }
@@ -76,7 +76,7 @@
   font-size: 1.3rem;
   font-weight: 700;
   color: #343a40;
-  border-left: 4px solid #20c997; /* Accent color from the image */
+  border-left: 4px solid #649AE4; /* Accent color from the image */
   padding-left: 12px;
   margin-bottom: 20px;
 }
@@ -92,7 +92,7 @@
   width: 150px;
   margin: 0 auto;
   padding: 15px;
-  background-color: #20c997; /* Green color from the image */
+  background-color: #649AE4; /* Blue color from the image */
   color: white;
   border: none;
   border-radius: 8px;
@@ -103,7 +103,7 @@
 }
 
 .save-button:hover:not(:disabled) {
-  background-color: #1baa80; /* Darker green on hover */
+  background-color: #074a8d; /* Darker blue on hover */
 }
 
 .save-button:disabled {
