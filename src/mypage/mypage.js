@@ -4,69 +4,77 @@ import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import "./mypage.css";
 
-/** 아이콘 (경로: src/mypage → src/asset) */
-import pdfIcon from "../asset/save-icon.png";     // PDF 출력 아이콘
+/** 아이콘 (프로젝트 구조에 맞춰 경로 확인)
+ * 이미지 파일은 실제 프로젝트의 src/asset 폴더에 있어야 합니다.
+ */
+import pdfIcon from "../asset/save-icon.png";     // PDF 출력
 import deleteIcon from "../asset/delete-icon.png";
 
 export default function MyPage() {
-  /** ===== 탭 ===== */
+  /** ================== 탭 스위치 ================== */
   const [activeTab, setActiveTab] = useState("essays"); // "essays" | "experience"
 
-  /** ===== 자기소개서(기존) ===== */
+  /** ================== 자기소개서(기존) ================== */
   const [essays, setEssays] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(30);
+  const listWrapRef = useRef(null);
+  const sentinelRef = useRef(null);
 
-  /** ===== PDF 모달 ===== */
+  /** PDF 모달 */
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState([]);
   const printRef = useRef(null);
 
-  /** ===== 미리보기 팝업 ===== */
+  /** 팝업(미리보기) */
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupEssayData, setPopupEssayData] = useState(null);
 
-  /** ===== 무한 스크롤 ===== */
-  const [visibleCount, setVisibleCount] = useState(30);
-  const sentinelRef = useRef(null);
-  const listWrapRef = useRef(null);
-
-  /** ===== 사이드바 즐겨찾기 ===== */
-  const [favorites, setFavorites] = useState(() => {
-    try {
-      const raw = localStorage.getItem("mypage_favorites");
-      return raw ? JSON.parse(raw) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  /** ===== 내 경험 ===== */
-  const [experiences, setExperiences] = useState([
-    {
-      id: 1,
-      title: "경영대학로 플러스 디자인",
-      period: "2023.3.20 ~ 2023.5.30",
-      detail:
-        "연구/아이디어: 타겟군의 기존 데이터 리서치 종합, 타겟 분석 및 전략 제안 주도\n배운 점/느낀 점: 소비자 인사이트 도출 과정의 중요성을 실감, 브랜드와 소비자 간 정서적 연결을 만드는 것이 마케팅의 핵심임을 체감",
-      verified: true,
-      use: true, // ✅ 체크박스로 답변에 사용할지 여부
-    },
-  ]);
+  /** ================== 내 경험(서버 연동: DB 스키마 맞춤) ================== */
+  // DB 모델: experience_id, type, content, (user_id, essay_id)
+  const [experiences, setExperiences] = useState([]);
   const [addingOpen, setAddingOpen] = useState(false);
-  const [newExp, setNewExp] = useState({ title: "", period: "", detail: "" });
+  const [newExp, setNewExp] = useState({ type: "experience", content: "" });
 
+  // 단일 항목 편집
+  const [editingId, setEditingId] = useState(null);
+  const [editDraft, setEditDraft] = useState({ type: "experience", content: "" });
+
+  /** 사용자 정보 (사이드바) */
+  const [userInfo, setUserInfo] = useState(null);
+
+  /** 공통 */
   const token = localStorage.getItem("access_token");
   const navigate = useNavigate();
 
-  /** ===== 데이터 로드 ===== */
+  /* ================== 사용자 정보 로드 ================== */
   useEffect(() => {
     if (!token) {
       navigate("/login");
       return;
     }
-    (async () => {
+    const loadUser = async () => {
       try {
+        const res = await fetch("http://localhost:8000/user/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) throw new Error("사용자 정보 요청 실패");
+        const data = await res.json();
+        setUserInfo(data.user_info);
+      } catch (err) {
+        console.error("사용자 정보 가져오기 실패:", err);
+      }
+    };
+    loadUser();
+  }, [token, navigate]);
+
+  /* ================== 자기소개서 로드 ================== */
+  useEffect(() => {
+    if (!token) return;
+    const load = async () => {
+      try {
+        // 내 자기소개서 목록 API
+        // GET /essay/my
         const res = await fetch("http://localhost:8000/essay/my", {
           method: "GET",
           headers: {
@@ -75,17 +83,42 @@ export default function MyPage() {
           },
         });
         const data = await res.json();
-        if (Array.isArray(data))
-          data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-        setEssays(Array.isArray(data) ? data : []);
+        const arr = Array.isArray(data) ? data : [];
+        arr.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        setEssays(arr);
         setVisibleCount(30);
       } catch (e) {
-        console.error("자소서 불러오기 실패:", e);
+        console.error("자기소개서 불러오기 실패:", e);
       }
-    })();
+    };
+    load();
   }, [navigate, token]);
 
-  /** ===== 무한 스크롤(자소서 탭에서만) ===== */
+  /* ================== 내 경험 로드(READ) ================== */
+  useEffect(() => {
+    if (!token) return;
+    const loadExperiences = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/api/essay-info/essay-experience", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!res.ok) throw new Error("경험 목록 요청 실패");
+        const data = await res.json();
+        // 응답이 배열이거나 {items:[...]} 형태일 수 있어 방어적으로 처리
+        const list = Array.isArray(data) ? data : (Array.isArray(data.items) ? data.items : []);
+        setExperiences(list);
+      } catch (e) {
+        console.error("경험 목록 불러오기 실패:", e);
+      }
+    };
+    loadExperiences();
+  }, [token]);
+
+  /* ================== 무한 스크롤(자소서 탭에서만) ================== */
   useEffect(() => {
     if (activeTab !== "essays" || !sentinelRef.current) return;
     const io = new IntersectionObserver(
@@ -100,20 +133,23 @@ export default function MyPage() {
     return () => io.disconnect();
   }, [essays.length, activeTab]);
 
-  /** ===== 자소서 선택/해제 ===== */
+  /* ================== 자소서: 선택/모달/PDF/삭제 ================== */
   const toggleSelectItem = (id) =>
     setSelectedItems((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   const stopRowClick = (e) => e.stopPropagation();
 
-  /** ===== 자소서: PDF 출력 모달 ===== */
   const handleOpenPdfModal = async () => {
     if (selectedItems.length === 0) return;
     try {
+      // 단건 상세 조회 API: GET /essay/{essay_id}
       const details = await Promise.all(
         selectedItems.map((id) =>
           fetch(`http://localhost:8000/essay/${id}`, {
             method: "GET",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
           }).then((r) => r.json())
         )
       );
@@ -124,43 +160,6 @@ export default function MyPage() {
     }
   };
 
-  /** ===== 자소서: 삭제 ===== */
-  const handleDeleteItems = async () => {
-    if (selectedItems.length === 0) return;
-    setIsDeleting(true);
-    try {
-      await Promise.all(
-        selectedItems.map((id) =>
-          fetch(`http://localhost:8000/essay/${id}`, {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-          }).then((res) => {
-            if (!res.ok) throw new Error(`삭제 실패: ${id}`);
-          })
-        )
-      );
-      setEssays((prev) => prev.filter((e) => !selectedItems.includes(e.essay_id)));
-      setSelectedItems([]);
-    } catch (e) {
-      console.error("삭제 중 오류:", e);
-    } finally {
-      setIsDeleting(false);
-    }
-  };
-
-  /** ===== 즐겨찾기 ===== */
-  const handleAddFavorites = () => {
-    if (selectedItems.length === 0) return;
-    setFavorites((prev) => {
-      const s = new Set(prev);
-      selectedItems.forEach((id) => s.add(id));
-      const next = Array.from(s);
-      localStorage.setItem("mypage_favorites", JSON.stringify(next));
-      return next;
-    });
-  };
-
-  /** ===== 모달에서 실제 PDF 생성 ===== */
   const handlePDF = async () => {
     if (!printRef.current) return;
     const pdf = new jsPDF("p", "pt", "a4");
@@ -181,96 +180,154 @@ export default function MyPage() {
     }
   };
 
-  /** ===== 내 경험: 추가/저장/삭제 + 사용여부 토글 ===== */
-  const handleOpenAdd = () => setAddingOpen(true);
-  const handleCancelAdd = () => {
-    setAddingOpen(false);
-    setNewExp({ title: "", period: "", detail: "" });
+  const handleDeleteEssays = async () => {
+    if (selectedItems.length === 0) return;
+    try {
+      // 삭제 API: DELETE /essay/{essay_id}
+      await Promise.all(
+        selectedItems.map((id) =>
+          fetch(`http://localhost:8000/essay/${id}`, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          })
+        )
+      );
+      setEssays((prev) => prev.filter((e) => !selectedItems.includes(e.essay_id)));
+      setSelectedItems([]);
+    } catch (e) {
+      console.error("삭제 중 오류:", e);
+    }
   };
-  const handleChangeNewExp = (e) => {
+
+  /* ================== 내 경험: 추가/편집/삭제 ================== */
+  const openAdd = () => setAddingOpen(true);
+  const cancelAdd = () => {
+    setAddingOpen(false);
+    setNewExp({ type: "experience", content: "" });
+  };
+
+  const changeNew = (e) => {
     const { name, value } = e.target;
     setNewExp((s) => ({ ...s, [name]: value }));
   };
-  const handleSaveNewExp = async () => {
-    if (!newExp.title.trim() || !newExp.period.trim() || !newExp.detail.trim()) return;
-    const newItem = { id: Date.now(), ...newExp, verified: true, use: true };
-    setExperiences((prev) => [newItem, ...prev]);
-    setAddingOpen(false);
-    setNewExp({ title: "", period: "", detail: "" });
 
-    /* // 서버 저장 예시(미구현)
-    await fetch("http://localhost:8000/experience", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify(newItem),
+  const saveNew = async () => {
+    const { type, content } = newExp;
+    if (!content.trim()) return;
+    try {
+      const res = await fetch("http://localhost:8000/api/essay-info/essay-experience", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ type, content }),
+      });
+      if (!res.ok) throw new Error("경험 추가 실패");
+      const created = await res.json();
+      setExperiences((prev) => [created, ...prev]);
+      setAddingOpen(false);
+      setNewExp({ type: "experience", content: "" });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const startEdit = (exp) => {
+    setEditingId(exp.experience_id);
+    setEditDraft({ type: exp.type, content: exp.content ?? "" });
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditDraft({ type: "experience", content: "" });
+  };
+
+  const changeEdit = (e) => {
+    const { name, value } = e.target;
+    setEditDraft((s) => ({ ...s, [name]: value }));
+  };
+
+  const saveEdit = async (id) => {
+    const idx = experiences.findIndex((e) => e.experience_id === id);
+    if (idx < 0) return;
+
+    // Optimistic UI
+    const old = experiences[idx];
+    const next = { ...old, ...editDraft };
+
+    setExperiences((prev) => {
+      const copy = [...prev];
+      copy[idx] = next;
+      return copy;
     });
-    */
-  };
-  const handleDeleteExp = async (id) => {
-    setExperiences((prev) => prev.filter((e) => e.id !== id));
-    /* // 서버 삭제 예시(미구현)
-    await fetch(`http://localhost:8000/experience/${id}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    */
-  };
-  const handlePersistExp = async (id) => {
-    const target = experiences.find((e) => e.id === id);
-    console.log("Would persist experience:", target);
-    /* // 서버 수정/저장 예시(미구현)
-    await fetch(`http://localhost:8000/experience/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify(target),
-    });
-    */
-  };
-  const toggleUseExp = (id) => {
-    setExperiences((prev) => prev.map((e) => (e.id === id ? { ...e, use: !e.use } : e)));
+    setEditingId(null);
+
+    try {
+      const res = await fetch(`http://localhost:8000/api/essay-info/essay-experience/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ type: next.type, content: next.content }),
+      });
+      if (!res.ok) throw new Error("경험 수정 실패");
+      const updated = await res.json();
+      // 서버 정본으로 한번 더 싱크 (필요 시)
+      setExperiences((prev) =>
+        prev.map((e) => (e.experience_id === id ? updated : e))
+      );
+    } catch (e) {
+      console.error(e);
+      // rollback
+      setExperiences((prev) =>
+        prev.map((e) => (e.experience_id === id ? old : e))
+      );
+    }
   };
 
-  /** ===== 스타일 헬퍼 ===== */
-  const styles = {
-    listWrap: { width: "100%", maxWidth: 980, margin: "0 auto" },
-    header: {
-      display: "flex",
-      alignItems: "center",
-      gap: 12,
-      padding: "12px 16px",
-      borderBottom: "1px solid #e5e7eb",
-      color: "#6b7280",
-      fontSize: 13,
-    },
-    row: (selected) => ({
-      display: "grid",
-      gridTemplateColumns: "32px 24px 1.2fr 2fr 180px",
-      alignItems: "center",
-      gap: 12,
-      padding: "12px 16px",
-      borderBottom: "1px solid #e5e7eb",
-      cursor: "pointer",
-      background: selected ? "#f5faff" : "#fff",
-    }),
-    checkbox: { width: 16, height: 16 },
-    star: { fontSize: 16, color: "#bfc7d4" },
-    company: { fontWeight: 600, color: "#1f2937" },
-    position: { color: "#6b7280", marginLeft: 6 },
-    question: { color: "#374151", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" },
-    date: { textAlign: "right", color: "#6b7280", fontSize: 13 },
-    sentinel: { height: 1 },
+  const removeExp = async (id) => {
+    const oldList = experiences;
+    // Optimistic UI
+    setExperiences((prev) => prev.filter((e) => e.experience_id !== id));
+
+    try {
+      const res = await fetch(`http://localhost:8000/api/essay-info/essay-experience/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error("경험 삭제 실패");
+    } catch (e) {
+      console.error(e);
+      // rollback
+      setExperiences(oldList);
+    }
   };
 
-  const visibleItems = essays.slice(0, visibleCount);
+  /** 화면에 보이는 자기소개서 개수 */
+  const visible = essays.slice(0, visibleCount);
 
-  /** ===== 렌더 ===== */
   return (
     <div className="mypage-root">
-      {/* 고정 사이드바 */}
-      <aside className="fixed-sidebar" aria-label="사이드바">
-        <div className="sb-profile">
-          <div className="sb-avatar" />
-          <div className="sb-name">김주현</div>
+      {/* ===== 고정 사이드바 ===== */}
+      <aside className="fixed-sidebar">
+        <div
+          className="sb-profile"
+        >
+          <div
+            className="sb-avatar"
+            style={
+              userInfo?.profile_image
+                ? { backgroundImage: `url(${userInfo.profile_image})`, backgroundSize: "cover", backgroundPosition: "center" }
+                : undefined
+            }
+          />
+          <div className="sb-name">{userInfo ? userInfo.name : "로딩 중..."}</div>
+          <div className="sb-email">{userInfo ? userInfo.email : ""}</div>
         </div>
 
         <nav className="sb-nav">
@@ -289,28 +346,41 @@ export default function MyPage() {
         </nav>
 
         <div className="sb-footer">
-          <button className="sb-cta" onClick={() => navigate("/write")}>자기소개서 제작하기</button>
+          <button className="sb-cta" onClick={() => navigate("/write")}>
+            자기소개서 제작하기
+          </button>
         </div>
       </aside>
 
-      {/* 오른쪽 컨텐츠 */}
+      {/* ===== 오른쪽 본문 ===== */}
       <main className="mypage-content" ref={listWrapRef}>
         {activeTab === "essays" ? (
           <>
             <div className="mypage-header">
               <h2 className="mypage-title">자기소개서 모음</h2>
               <div className="mypage-actions">
-                <button className="icon-btn" onClick={handleOpenPdfModal} title="PDF 출력" disabled={selectedItems.length === 0}>
-                  <img src={pdfIcon} alt="PDF 출력" />
+                <button
+                  className="icon-btn"
+                  onClick={handleOpenPdfModal}
+                  disabled={selectedItems.length === 0}
+                  title="PDF 출력"
+                >
+                  <img src={pdfIcon} alt="PDF" />
                 </button>
-                <button className="icon-btn" onClick={handleDeleteItems} title="삭제" disabled={selectedItems.length === 0}>
+                <button
+                  className="icon-btn"
+                  onClick={handleDeleteEssays}
+                  disabled={selectedItems.length === 0}
+                  title="삭제"
+                >
                   <img src={deleteIcon} alt="삭제" />
                 </button>
               </div>
             </div>
 
-            <div style={styles.listWrap}>
-              <div style={styles.header}>
+            {/* 리스트 헤더 */}
+            <div className="list-wrap">
+              <div className="list-head">
                 <span style={{ width: 32 }} />
                 <span style={{ width: 24 }} />
                 <span style={{ flex: 1.2 }}>회사 · 직무</span>
@@ -318,17 +388,19 @@ export default function MyPage() {
                 <span style={{ width: 180, textAlign: "right" }}>작성일</span>
               </div>
 
-              {visibleItems.map((essay) => {
+              {/* 리스트 */}
+              {visible.map((essay) => {
                 const id = essay.essay_id;
                 const selected = selectedItems.includes(id);
-                const company = essay.essay_question.company_name;
-                const position = essay.essay_question.job_position;
-                const question = essay.essay_question.question;
+                const company = essay.essay_question?.company_name ?? "-";
+                const position = essay.essay_question?.job_position ?? "-";
+                const question = essay.essay_question?.question ?? "-";
                 const created = new Date(essay.created_at).toLocaleString();
+
                 return (
                   <div
                     key={id}
-                    style={styles.row(selected)}
+                    className={`list-row ${selected ? "row-selected" : ""}`}
                     onClick={() => {
                       setPopupEssayData(essay);
                       setIsPopupOpen(true);
@@ -336,94 +408,128 @@ export default function MyPage() {
                   >
                     <input
                       type="checkbox"
-                      style={styles.checkbox}
+                      className="row-check"
                       checked={selected}
                       onClick={stopRowClick}
                       onChange={() => toggleSelectItem(id)}
                     />
-                    <span style={styles.star} onClick={stopRowClick} title="즐겨찾기">☆</span>
-                    <div>
-                      <span style={styles.company}>{company}</span>
-                      <span style={styles.position}>({position})</span>
+                    <span className="row-star" title="즐겨찾기">☆</span>
+                    <div className="row-company">
+                      <span className="c-name">{company}</span>
+                      <span className="c-pos">({position})</span>
                     </div>
-                    <div style={styles.question} title={question}>{question}</div>
-                    <div style={styles.date}>{created}</div>
+                    <div className="row-question" title={question}>{question}</div>
+                    <div className="row-date">{created}</div>
                   </div>
                 );
               })}
-              <div ref={sentinelRef} style={styles.sentinel} />
+
+              <div ref={sentinelRef} style={{ height: 1 }} />
             </div>
 
-            <div className="mp-pagination"><span>&lt;</span><span className="current">2</span><span>&gt;</span></div>
+            <div className="mp-pagination">
+              <span>&lt;</span><span className="current">2</span><span>&gt;</span>
+            </div>
           </>
         ) : (
           <>
             {/* ===== 내 경험 뷰 ===== */}
             <div className="exp-header">
               <h2 className="exp-title">내 경험</h2>
-              <p className="exp-tip">✨ 체크된 경험만 문항 답변에 사용됩니다.</p>
+              <p className="exp-tip">✨ 유형(type)을 선택하고 내용을 입력해 저장하세요.</p>
             </div>
 
             {experiences.map((exp) => (
-              <div className={`exp-card ${exp.use ? "" : "exp-disabled"}`} key={exp.id}>
-                <div className="exp-card-top">
-                  <label className="exp-left">
-                    <input
-                      type="checkbox"
-                      className="exp-use"
-                      checked={!!exp.use}
-                      onChange={() => toggleUseExp(exp.id)}
-                      aria-label="이 경험 사용"
-                    />
-                    <span className="exp-badge">v</span>
-                  </label>
-
-                  <div className="exp-actions">
-                    <button className="exp-save-btn" onClick={() => handlePersistExp(exp.id)}>저장하기</button>
-                    <button className="exp-del-btn" onClick={() => handleDeleteExp(exp.id)} aria-label="삭제">
-                      <img src={deleteIcon} alt="삭제" />
-                    </button>
+              <div key={exp.experience_id} className="exp-card">
+                {editingId === exp.experience_id ? (
+                  <div className="exp-edit">
+                    <div className="row">
+                      <label>유형</label>
+                      <select name="type" value={editDraft.type} onChange={changeEdit}>
+                        <option value="experience">경험</option>
+                        <option value="strength">강점</option>
+                        <option value="weakness">약점</option>
+                        <option value="motivation">동기</option>
+                        <option value="goal">목표</option>
+                      </select>
+                    </div>
+                    <div className="row">
+                      <label>내용</label>
+                      <textarea
+                        name="content"
+                        value={editDraft.content}
+                        onChange={changeEdit}
+                        placeholder="경험 내용을 입력하세요"
+                      />
+                    </div>
+                    <div className="form-actions">
+                      <button className="exp-save-btn" onClick={() => saveEdit(exp.experience_id)}>저장</button>
+                      <button className="exp-cancel-btn" onClick={cancelEdit}>취소</button>
+                      <button className="exp-del-btn" onClick={() => removeExp(exp.experience_id)} aria-label="삭제">
+                        <img src={deleteIcon} alt="삭제" />
+                      </button>
+                    </div>
                   </div>
-                </div>
-
-                <div className="exp-body">
-                  <div className="exp-line"><strong>활동명</strong> : {exp.title}</div>
-                  <div className="exp-line"><strong>활동기간</strong> : {exp.period}</div>
-                  <div className="exp-line"><strong>활동/기여도</strong> : {exp.detail.split("\n")[0]}</div>
-                  <div className="exp-line"><strong>배운 점 / 느낀 점</strong> : {exp.detail.split("\n")[1]}</div>
-                </div>
+                ) : (
+                  <>
+                    <div className="exp-card-top" style={{ marginBottom: 8 }}>
+                      <div className="exp-left">
+                        <span className="exp-badge">{exp.type?.slice(0, 1).toUpperCase()}</span>
+                        <strong style={{ textTransform: "capitalize" }}>{exp.type}</strong>
+                      </div>
+                      <div className="exp-actions">
+                        <button className="exp-save-btn" onClick={() => startEdit(exp)}>편집</button>
+                        <button className="exp-del-btn" onClick={() => removeExp(exp.experience_id)} aria-label="삭제">
+                          <img src={deleteIcon} alt="삭제" />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="exp-body">
+                      <div className="exp-line">{exp.content}</div>
+                    </div>
+                  </>
+                )}
               </div>
             ))}
 
             {!addingOpen ? (
-              <button className="exp-add-link" onClick={handleOpenAdd}>+ 추가하기</button>
+              <button className="exp-add-link" onClick={() => setAddingOpen(true)}>+ 추가하기</button>
             ) : (
               <div className="exp-add-form">
                 <div className="row">
-                  <label>활동명</label>
-                  <input name="title" value={newExp.title} onChange={handleChangeNewExp} placeholder="예: 마케팅 서포터즈" />
+                  <label>유형</label>
+                  <select name="type" value={newExp.type} onChange={changeNew}>
+                    <option value="experience">경험</option>
+                    <option value="strength">강점</option>
+                    <option value="weakness">약점</option>
+                    <option value="motivation">동기</option>
+                    <option value="goal">목표</option>
+                  </select>
                 </div>
                 <div className="row">
-                  <label>활동기간</label>
-                  <input name="period" value={newExp.period} onChange={handleChangeNewExp} placeholder="예: 2024.03 ~ 2024.08" />
-                </div>
-                <div className="row">
-                  <label>상세</label>
-                  <textarea name="detail" value={newExp.detail} onChange={handleChangeNewExp} placeholder="무엇을 했고 무엇을 배웠는지 작성해주세요." />
+                  <label>내용</label>
+                  <textarea
+                    name="content"
+                    value={newExp.content}
+                    onChange={changeNew}
+                    placeholder="경험 내용을 입력하세요"
+                  />
                 </div>
                 <div className="form-actions">
-                  <button className="exp-save-btn" onClick={handleSaveNewExp}>저장하기</button>
-                  <button className="exp-cancel-btn" onClick={handleCancelAdd}>취소</button>
+                  <button className="exp-save-btn" onClick={saveNew}>저장</button>
+                  <button className="exp-cancel-btn" onClick={cancelAdd}>취소</button>
                 </div>
               </div>
             )}
 
-            <div className="mp-pagination"><span>&lt;</span><span className="current">2</span><span>&gt;</span></div>
+            <div className="mp-pagination">
+              <span>&lt;</span><span className="current">2</span><span>&gt;</span>
+            </div>
           </>
         )}
       </main>
 
-      {/* PDF 모달 */}
+      {/* ===== PDF 모달 ===== */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-content" ref={printRef}>
@@ -443,7 +549,7 @@ export default function MyPage() {
         </div>
       )}
 
-      {/* 자소서 미리보기 팝업 */}
+      {/* ===== 자소서 미리보기 팝업 ===== */}
       {isPopupOpen && popupEssayData && (
         <div className="popup-overlay">
           <div className="popup-container">
