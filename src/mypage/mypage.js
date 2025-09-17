@@ -427,9 +427,6 @@ export default function MyPage() {
               <div ref={sentinelRef} style={{ height: 1 }} />
             </div>
 
-            <div className="mp-pagination">
-              <span>&lt;</span><span className="current">2</span><span>&gt;</span>
-            </div>
           </>
         ) : (
           <>
@@ -522,9 +519,6 @@ export default function MyPage() {
               </div>
             )}
 
-            <div className="mp-pagination">
-              <span>&lt;</span><span className="current">2</span><span>&gt;</span>
-            </div>
           </>
         )}
       </main>
