@@ -346,7 +346,7 @@ export default function MyPage() {
         </nav>
 
         <div className="sb-footer">
-          <button className="sb-cta" onClick={() => navigate("/write")}>
+          <button className="sb-cta" onClick={() => navigate("/input2")}>
             자기소개서 제작하기
           </button>
         </div>

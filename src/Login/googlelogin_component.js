@@ -2,7 +2,7 @@
 import React from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
-import googleBtn from "../asset/web_light_rd_ctn@4x.png"; // 업로드한 버튼 이미지
+import googleBtn from "../asset/web_light_rd_ctn@4x.png";
 import "./login.css";
 
 const GoogleLoginBtn = () => {
@@ -28,7 +28,8 @@ const GoogleLoginBtn = () => {
         localStorage.setItem("access_token", data.access_token);
         localStorage.setItem("user_name", data.name);
 
-        navigate("/input2");
+        // ✅ 로그인 후 마이페이지 이동
+        navigate("/mypage", { replace: true });
       } catch (err) {
         console.error("로그인 중 에러 발생:", err);
       }
@@ -44,9 +45,9 @@ const GoogleLoginBtn = () => {
       style={{
         cursor: "pointer",
         width: "auto",
-        height: "50px",     // 필요하면 조절 가능
+        height: "50px",
         display: "block",
-        margin: "0 auto",   // 가운데 정렬
+        margin: "0 auto",
       }}
     />
   );

@@ -45,8 +45,9 @@
 }
 
 .mypage-button,
-.logout-button {
-  background-color: #649AE4;
+.logout-button,
+.login-button {
+  background-color: #29c2b1;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -56,8 +57,4 @@
   font-weight: 500;
 }
 
-.logout-button {
-  background-color: transparent;
-  color: #495057;
-  border: 1px solid #ced4da;
-}
+
