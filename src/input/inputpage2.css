@@ -16,8 +16,6 @@ body {
   flex-direction: column;
 }
 
-
-
 .new-form-container {
   width: 100%;
   max-width: 900px;
@@ -184,6 +182,7 @@ body {
   font-size: 0.95rem;
   line-height: 1.5;
   color: #495057;
+  white-space: pre-wrap; /* This ensures line breaks from the content string are respected */
 }
 
 .experience-content p:last-child {
@@ -222,5 +221,6 @@ body {
   to   { transform: rotate(360deg); }
 }
 
-
-.mt15{margin-top: 15px;}
+.mt15 {
+  margin-top: 15px;
+}
