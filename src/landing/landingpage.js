@@ -22,15 +22,17 @@ import { useEffect } from "react";
 // import imgForm from "../asset/step-form.png";
 
 export default function LandingPage() {
-  // ① useEffect 한 줄 수정 (show → is-in)
   useEffect(() => {
     const io = new IntersectionObserver(
-      (ents) => ents.forEach(e => e.isIntersecting && e.target.classList.add("is-in")),
-      { threshold: 0.2 }
+      (ents, ob) => ents.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add("is-in"); ob.unobserve(e.target); }
+      }),
+      { threshold: 0.15, rootMargin: "0px 0px -12% 0px" }
     );
     document.querySelectorAll(".reveal-on-scroll").forEach(el => io.observe(el));
     return () => io.disconnect();
   }, []);
+
 
   return (
     <main className="landing">
@@ -52,7 +54,7 @@ export default function LandingPage() {
       <section className="hero hero--light">
         {/* 텍스트 레이어 */}
         <div className="hero__content">
-          <div className="hero__text">
+          <div className="hero__text fade-seq">
             <h1 className="hero__title">자소서,<br />더 설득력 있게</h1>
             <p className="hero__subtitle">
               <span className="accent">여러 AI의 피드백</span>으로<br />
@@ -116,13 +118,13 @@ export default function LandingPage() {
           </div>
 
           {/* 말풍선 */}
-          <div className="bubble bubble--left">
+          <div className="bubble bubble--left reveal-on-scroll">
             <div className="bubble-text">경험은 있는데<br />어떻게 풀어야 할지 모르겠어</div>
           </div>
-          <div className="bubble bubble--right bubble--top">
+          <div className="bubble bubble--right bubble--top reveal-on-scroll">
             <div className="bubble-text">뭘 써야 할지 막막해요...</div>
           </div>
-          <div className="bubble bubble--right bubble--bottom">
+          <div className="bubble bubble--right bubble--bottom reveal-on-scroll">
             <div className="bubble-text">내 자소서, 누가 좀 봐줬으면..</div>
           </div>
 
@@ -136,29 +138,32 @@ export default function LandingPage() {
           />
         </div>
 
-        {/* ── 아래: 글래스 카드 (같은 배경 위에서 이어짐) ── */}
-        <div className="glass-step reveal-on-scroll is-in" id="step1">          <div className="glass-step__inner">
-          <p className="glass-step__eyebrow">STEP 1</p>
-          <h3 className="glass-step__title">지원 기업명과 직무/분야를 입력하세요.</h3>
-          <p className="glass-step__desc">지원 기업과 직무에 맞춰 다:서가 맞춤 초안을 생성합니다.</p>
-        </div>
+        {/* ================= STEP 1 ================= */}
+        <section className="step1-bg" id="step1">
+          <div className="step1-card reveal-on-scroll">
+            {/* 좌측 상단 STEP 1 */}
+            <span className="step1-eyebrow">STEP 1</span>
 
-          {/* 스티커/로고 */}
-          <img src={require("../asset/step-kakao.png")} alt="Kakao" className="glass-step__badge badge--kakao" />
-          <img src={require("../asset/step-apple.png")} alt="Apple" className="glass-step__badge badge--apple" />
-          <img src={require("../asset/step-naver.png")} alt="Naver" className="glass-step__badge badge--naver" />
-        </div>
+            {/* 제목/설명 */}
+            <h3 className="step1-title">지원 기업명과 직무/분야를 입력하세요.</h3>
+            <p className="step1-caption">지원 기업과 직무에 맞춰 다:서가 맞춤 초안을 생성합니다.</p>
+
+            {/* 스티커/로고 */}
+            <img src={require("../asset/step-kakao.png")} alt="Kakao" className="step1__badge step1__badge--kakao" />
+            <img src={require("../asset/step-apple.png")} alt="Apple" className="step1__badge step1__badge--apple" />
+            <img src={require("../asset/step-naver.png")} alt="Naver" className="step1__badge step1__badge--naver" />
+          </div>
+        </section>
+
 
         {/* ================= STEP 2 ================= */}
         <section className="step2-bg" id="step2">
-          <div className="step2-card reveal-on-scroll is-in">
-            {/* 우측 상단 STEP 2 */}
+          <div className="step2-card reveal-on-scroll">
             <span className="step2-eyebrow">STEP 2</span>
 
-            {/* 제목 */}
             <h3 className="step2-title">자기소개서 질문 문항을 추가하세요.</h3>
 
-            {/* 이미지 (직접 삽입) */}
+            {/* 폼 이미지를 조금 위로 */}
             <img
               src={require("../asset/step-form.png")}
               alt="자기소개서 질문 폼"
@@ -170,11 +175,11 @@ export default function LandingPage() {
               className="step2__laptop"
             />
 
-            {/* 하단 카피 */}
             <div className="step2-bottomcopy">
               <h4 className="step2-headline">
-                질문 문항은 <strong>추가하고,</strong><br />
-                답변은 <span className="accent-blue">한번에</span>
+                질문 문항은 <strong>추가하고,</strong>
+                <br />
+                답변은 <span className="accent-blue accent-with-dots">한번에</span>
               </h4>
               <p className="step2-caption">
                 최대 4개의 문항에 대한 자기소개서 초안을 한 번에 생성합니다.
@@ -183,20 +188,21 @@ export default function LandingPage() {
           </div>
         </section>
 
+
         {/* =============== STEP 3 =============== */}
         <section className="step3-bg" id="step3">
-          <div className="step3-card reveal-on-scroll is-in">
+          <div className="step3-card reveal-on-scroll">
             <span className="step3-eyebrow">STEP 3</span>
             <h3 className="step3-title">경험을 작성하고 ‘제작하기’를 누르세요</h3>
 
-            {/* 좌측: 경험 카드 이미지 */}
+            {/* 좌측 카드 */}
             <img
               src={require("../asset/step3-card.png")}
               alt="경험 및 활동 입력 카드"
               className="step3__img-card"
             />
 
-            {/* 우측: 제작하기 버튼 이미지 (카드 위에 겹침) */}
+            {/* CTA: 오른쪽 아래로 이동 */}
             <img
               src={require("../asset/step3-cta.png")}
               alt="제작하기 버튼"
@@ -206,11 +212,9 @@ export default function LandingPage() {
             {/* 하단 카피 */}
             <div className="step3-bottomcopy">
               <h4 className="step3-headline">
-                <span className="accent-blue">짧게</span> 적어도 괜찮습니다
+                <span className="accent-blue accent-2dots">짧게</span> 적어도 괜찮습니다
               </h4>
-              <h4 className="step3-subline">
-                경험은 간단히 — 자기소개서는 깊이 있게
-              </h4>
+              <h4 className="step3-subline">경험은 간단히 — 자기소개서는 깊이 있게</h4>
               <ul className="step3-bullets">
                 <li>저장된 경험을 선택하고, 필요한 경우 새로 추가할 수 있습니다.</li>
                 <li>가이드라인에 맞춰 간단히 작성해도 AI가 알아서 완성해 줍니다.</li>
@@ -218,7 +222,6 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
-
 
         {/* =============== STEP 4 (fixes) =============== */}
         <section className="step4-bg" id="step4">
