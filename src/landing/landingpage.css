@@ -298,353 +298,802 @@
   vertical-align: middle;
 }
 
+
 /* =========================
-   Persona Section
+   STEPS (Frame7.png 배경 + 글래스 카드)
    ========================= */
-.persona {
+.steps-bg {
   position: relative;
-  --figure-top: 220px;        /* ← 더 위로 올리고 싶으면 숫자 더 작게 */
-  --label-gap: 20px;
+  background: url("../asset/steps-frame.png") center/cover no-repeat;
   overflow: hidden;
-  min-height: clamp(800px, 92vh, 1100px);
-  background: linear-gradient(180deg, #e8f1ff 0%, #92b8f1 35%, #77a9ea 70%, #cfe0ff 100%);
+  padding-bottom: 140px;
   isolation: isolate;
-  --figure-top: 220px;        /* ← 더 위로 올리고 싶으면 숫자 더 작게 */
-  --label-gap: 20px;
+  /* 카드 하단 여유 */
 }
 
-/* Group32: CSS로 링 3개(에셋 없이) */
-.persona__rings {
-  position: absolute;
-  width: 759px;
-  height: 741px;
-  left: calc(50% - 759px/2);
-  top: -70px;
-  opacity: .6;
+/* 화면을 위/아래 두 장으로 쪼개기(배경 유지) */
+.steps-hero {
+  position: relative;
+  min-height: 100vh;
   z-index: 1;
-  pointer-events: none;
-  background:
-    radial-gradient(50% 50% at 50% 50%, rgba(78, 116, 217, .28) 0 40%, rgba(78, 116, 217, 0) 42%),
-    radial-gradient(50% 50% at 50% 50%, rgba(78, 116, 217, .22) 0 28%, rgba(78, 116, 217, 0) 30%),
-    radial-gradient(50% 50% at 50% 50%, rgba(78, 116, 217, .16) 0 18%, rgba(78, 116, 217, 0) 20%);
-  background-repeat: no-repeat;
-  background-size: 100% 100%, 72% 72%, 46% 46%;
-  background-position: center;
 }
 
-/* 아바타+라벨 묶음 */
-.persona__figure{
+.steps-cta {
+  position: relative;
+  min-height: 100vh;
+}
+
+/* 링 */
+.steps__rings {
+  z-index: 1;
   position: absolute;
   left: 50%;
-  top: var(--figure-top);
+  top: 62px;
   transform: translateX(-50%);
+  width: 520px;
+  height: 520px;
+  background: url("../asset/persona-rings.png") center/contain no-repeat;
+  opacity: .6;
+  pointer-events: none;
+}
+
+/* 페르소나 중앙 */
+.persona__center {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--label-gap);
   z-index: 2;
-  pointer-events: none;
 }
 
-
-/* 아바타는 위치값 없이 크기만 */
-.persona__avatar{
-  width: clamp(160px, 22vw, 260px);
+.persona__avatar {
+  width: clamp(180px, 24vw, 240px);
   height: auto;
 }
 
-/* 라벨은 더 이상 absolute 아님! */
-.persona__label{
-  position: static;            /* ⬅️ 기존 top/left/transform 삭제 */
-  color:#f2f6ff;
+.persona__name {
+  margin-top: 10px;
+  font-size: clamp(18px, 2vw, 24px);
   font-weight: 700;
-  text-shadow: 0 1px 4px rgba(0,0,0,.25);
-  white-space: nowrap;
-  font-size: clamp(16px, 1.6vw, 20px); /* 글자 크기 조절 */
+  color: #fff;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, .15);
 }
 
-.speech {
+/* 말풍선 */
+.bubble {
   position: absolute;
-  max-width: min(92vw, 480px);
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 10px 10px 4px rgba(0, 0, 0, .25);
-  z-index: 3;
-  padding: 16px 18px;
+  background: url("../asset/Union.svg") center/contain no-repeat;
 }
 
-.speech__inner {
-  font-size: clamp(16px, 1.2vw, 20px);
-  line-height: 1.5;
-  color: #132957;
-  font-weight: 700;
+.bubble--right {
+  background-image: url("../asset/Union2.svg");
 }
 
-.speech::after {
-  content: "";
+/* 위치/크기 (피그마 기준 비율) */
+.bubble--left {
+  top: 88px;
+  left: 120px;
+  width: 190px;
+  height: 112px;
+}
+
+.bubble--right.bubble--top {
+  top: 26%;
+  right: 120px;
+  width: 246px;
+  height: 104px;
+}
+
+.bubble--right.bubble--bottom {
+  top: 52%;
+  right: 120px;
+  width: 246px;
+  height: 112px;
+}
+
+/* 텍스트 안전영역 */
+.bubble--left .bubble-text {
   position: absolute;
-  bottom: -10px;
-  left: 28px;
-  width: 0;
-  height: 0;
-  border: 12px solid transparent;
-  border-top-color: #fff;
-  transform: rotate(20deg);
-  filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, .15));
-}
-
-.speech--right::after {
-  left: auto;
-  right: 28px;
-  transform: rotate(-20deg);
-}
-
-.persona__headline {
-  position: absolute;
-  left: 50%;
-  bottom: clamp(60px, 10vh, 120px);
-  transform: translateX(-50%);
+  inset: 16px 20px 56px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  z-index: 3;
-}
-
-.persona__headline .eyebrow {
-  font-size: clamp(16px, 2.1vw, 20px);
+  font-size: 18px;
+  line-height: 1.5;
+  color: #111;
   font-weight: 700;
-  color: #eaf2ff;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, .15);
-  margin-bottom: 6px;
 }
 
-.persona__headline .title {
-  font-size: clamp(20px, 3.2vw, 32px);
-  font-weight: 800;
-  color: #0f1f3f;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, .15);
+.bubble--right .bubble-text {
+  position: absolute;
+  inset: 16px 20px 48px 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 17px;
+  line-height: 1.5;
+  color: #111;
+  font-weight: 700;
 }
 
-.persona__arrow {
+.bubble::before,
+.bubble::after {
+  content: none !important;
+}
+
+/* 스크롤 화살표(피그마 느낌 두껍게) */
+.scroll-arrow {
   position: absolute;
   left: 50%;
-  bottom: 28px;
-  transform: translateX(-50%) rotate(-45deg);
-  width: 28px;
-  height: 28px;
-  border-left: 4px solid rgba(0, 0, 0, .28);
-  border-bottom: 4px solid rgba(0, 0, 0, .28);
-  border-radius: 3px;
+  bottom: 34px;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 60px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
   z-index: 3;
-  animation: arrowBounce 1.4s ease-in-out infinite;
+}
+
+.scroll-arrow::before {
+  content: "";
+  display: block;
+  width: 34px;
+  height: 34px;
+  margin: auto;
+  border-left: 8px solid rgba(255, 255, 255, .95);
+  border-bottom: 8px solid rgba(255, 255, 255, .95);
+  transform: rotate(-45deg);
+  border-radius: 4px;
+  animation: arrowBounce 1.5s ease-in-out infinite;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, .25));
 }
 
 @keyframes arrowBounce {
   0% {
-    transform: translateX(-50%) translateY(0) rotate(-45deg);
-    opacity: .9;
+    transform: translateY(0) rotate(-45deg);
+    opacity: .95;
   }
 
   50% {
-    transform: translateX(-50%) translateY(10px) rotate(-45deg);
-    opacity: .6;
+    transform: translateY(10px) rotate(-45deg);
+    opacity: .65;
   }
 
   100% {
-    transform: translateX(-50%) translateY(0) rotate(-45deg);
-    opacity: .9;
+    transform: translateY(0) rotate(-45deg);
+    opacity: .95;
   }
 }
 
-/* 반응형 */
-@media (max-width:1024px) {
-  .hero__content {
-    flex-direction: column;
+/* ───────── STEP 1: Glass card (유지) ───────── */
+.glass-step {
+  position: relative;
+  z-index: 2;
+  max-width: min(1180px, 92vw);
+  margin: 40px auto 0;
+  padding: clamp(26px, 3.2vw, 42px);
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .16) 0%, rgba(255, 255, 255, .06) 100%);
+  border: 1.5px solid rgba(39, 78, 155, .22);
+  box-shadow: 0 18px 30px rgba(0, 0, 0, .18), inset 0 1px 0 rgba(255, 255, 255, .35);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.glass-step__inner {
+  padding: clamp(18px, 2.2vw, 28px);
+}
+
+.glass-step__eyebrow {
+  margin: 0 0 6px;
+  font-weight: 900;
+  letter-spacing: .5px;
+  color: #214EB9;
+  font-size: clamp(22px, 2.6vw, 38px);
+}
+
+.glass-step__title {
+  margin: 6px 0 12px;
+  font-size: clamp(24px, 3.1vw, 44px);
+  font-weight: 900;
+  color: #0f1f3f;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+  line-height: 1.22;
+}
+
+.glass-step__desc {
+  margin: 6px 0 0;
+  font-size: clamp(16px, 1.8vw, 22px);
+  font-weight: 600;
+  color: rgba(15, 31, 63, .85);
+}
+
+.glass-step__badge {
+  position: absolute;
+  width: clamp(72px, 9.6vw, 128px);
+  aspect-ratio: 1/1;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, .25));
+}
+
+.badge--kakao {
+  right: clamp(220px, 18vw, 280px);
+  top: -36px;
+  transform: rotate(-9deg);
+}
+
+.badge--apple {
+  right: clamp(50px, 3vw, 100px);
+  top: -18px;
+  transform: rotate(3deg);
+}
+
+.badge--naver {
+  right: clamp(130px, 12vw, 200px);
+  bottom: -36px;
+  transform: rotate(-6deg);
+}
+
+@media (max-width:820px) {
+  .glass-step {
+    margin: 28px auto 0;
+  }
+
+  .glass-step__badge {
+    width: clamp(64px, 12vw, 96px);
+  }
+
+  .badge--kakao {
+    right: 22vw;
+    top: -18px;
+  }
+
+  .badge--apple {
+    right: 7vw;
+    top: -10px;
+  }
+
+  .badge--naver {
+    right: 16vw;
+    bottom: -22px;
+  }
+}
+
+/* ───────── STEP 2: 최소 구성만 남김 ───────── */
+.step2-bg {
+  position: relative;
+  padding: 48px 0 120px;
+}
+
+.step2-card {
+  position: relative;
+  /* 레이어 기준 */
+  overflow: visible;
+  z-index: 2;
+  max-width: min(1180px, 92vw);
+  margin: 0 auto;
+  padding: clamp(26px, 3.2vw, 42px);
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .18) 0%, rgba(255, 255, 255, .08) 100%);
+  border: 2px solid rgba(39, 78, 155, .28);
+  box-shadow: 0 22px 36px rgba(0, 0, 0, .22), inset 0 1px 0 rgba(255, 255, 255, .35);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* STEP2 라벨(오른쪽 위) + 제목(그 아래, 오른쪽 정렬) */
+.step2-eyebrow {
+  position: absolute;
+  top: clamp(16px, 1.8vw, 22px);
+  right: clamp(18px, 2vw, 28px);
+  font-weight: 900;
+  color: #214EB9;
+  letter-spacing: .5px;
+  font-size: clamp(22px, 2.4vw, 38px);
+}
+
+.step2-title {
+  text-align: right;
+  /* ← 오른쪽 정렬 */
+  margin: clamp(18px, 2.4vw, 28px) 0 clamp(10px, 1.4vw, 14px);
+  padding-right: clamp(6px, 1.2vw, 18px);
+  font-size: clamp(24px, 3.2vw, 44px);
+  font-weight: 900;
+  color: #0f1f3f;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+}
+
+/* 폼 이미지 = 위에 보이도록 */
+.step2__form {
+  position: relative;
+  /* z-index 적용을 위해 필요 */
+  z-index: 3;
+  /* 노트북보다 위 */
+  display: block;
+  width: clamp(380px, 38vw, 560px);
+  max-width: 100%;
+  margin: clamp(8px, 1vw, 14px) 0 0 clamp(2px, 1vw, 10px);
+  user-select: none;
+  pointer-events: none;
+  background: none !important;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, .18);
+  border-radius: 12px;
+}
+
+.step2__form-img {
+  position: relative;
+  z-index: 3;
+  width: 70%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 노트북 = 카드 안쪽으로 살짝 들어오게(아래 레이어) */
+.step2__laptop {
+  z-index: 1;
+  position: absolute;
+  right: clamp(0px, 0vw, 0px);
+  bottom: clamp(0px, 0vw, 0px);
+  width: clamp(520px, 44vw, 680px);
+  height: auto;
+  transform: none !important;
+  /* 회전/이동 제거 */
+  filter: drop-shadow(0 18px 24px rgba(0, 0, 0, .25));
+  pointer-events: none;
+  user-select: none;
+}
+
+/* 하단 카피 */
+.step2-bottomcopy {
+  margin-top: clamp(14px, 2vw, 20px);
+}
+
+.step2-headline {
+  margin: 0 0 6px;
+  font-weight: 900;
+  line-height: 1.25;
+  color: #0f1f3f;
+  font-size: clamp(22px, 3.6vw, 48px);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+}
+
+.step2-headline .accent-blue {
+  color: #1E4FD6;
+}
+
+.step2-caption {
+  margin: 4px 0 0;
+  color: rgba(15, 31, 63, .85);
+  font-weight: 600;
+  font-size: clamp(14px, 1.6vw, 20px);
+}
+
+/* 모바일 보정 */
+@media (max-width:980px) {
+  .step2__laptop {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    margin: clamp(18px, 3vw, 28px) auto 0;
+    display: block;
+  }
+
+  .step2__form {
+    margin-left: 0;
+  }
+}
+
+/* ===== STEP3 배경 + 글래스모피즘 컨테이너 ===== */
+.step3-bg {
+  position: relative;
+  padding: 48px 0 120px;
+}
+
+.step3-card {
+  position: relative;
+  overflow: visible;
+  z-index: 2;
+  max-width: min(1180px, 92vw);
+  margin: 0 auto;
+  padding: clamp(26px, 3.2vw, 42px);
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .18) 0%, rgba(255, 255, 255, .08) 100%);
+  border: 2px solid rgba(39, 78, 155, .28);
+  box-shadow: 0 22px 36px rgba(0, 0, 0, .22), inset 0 1px 0 rgba(255, 255, 255, .35);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: none;
+  /* ← 삭제 */
+  background-clip: padding-box;
+  /* 하이라인 방지 */
+  overflow: hidden;
+}
+
+/* 라벨·제목 정렬: 좌측 배치 */
+.step3-eyebrow {
+  position: absolute;
+  top: clamp(14px, 1.6vw, 22px);
+  left: clamp(18px, 2vw, 28px);
+  font-weight: 900;
+  color: #214EB9;
+  letter-spacing: .5px;
+  font-size: clamp(22px, 2.4vw, 38px);
+}
+
+.step3-title {
+  margin: clamp(34px, 4vw, 48px) 0 clamp(18px, 2vw, 24px);
+  text-align: left;
+  font-size: clamp(24px, 3.2vw, 44px);
+  font-weight: 900;
+  color: #0f1f3f;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+}
+
+/* 이미지 배치: 카드(좌) + CTA(우) */
+.step3__img-card {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: clamp(520px, 56vw, 760px);
+  /* 좌측 정렬 */
+  border-radius: 16px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, .18);
+}
+
+.step3__img-cta {
+  position: absolute;
+  z-index: 3;
+  right: clamp(28px, 4vw, 56px);
+  top: clamp(200px, 22vw, 340px);
+  /* 필요시 숫자만 조정 */
+  width: clamp(120px, 16vw, 220px);
+  pointer-events: none;
+  user-select: none;
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, .25));
+}
+
+.step3__img-cta {
+  position: absolute;
+  z-index: 3;
+  right: clamp(200px, 20vw, 500px);
+  top: clamp(360px, 30vw, 400px);
+  /* 필요시 숫자만 조정 */
+  width: clamp(240px, 16vw, 220px);
+  pointer-events: none;
+  user-select: none;
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, .25));
+}
+
+
+/* 하단 카피: 중앙 정렬 + 좌우 텍스트 대비 */
+.step3-bottomcopy {
+  margin-top: clamp(20px, 3vw, 32px);
+}
+
+.step3-headline {
+  margin: 0 0 6px;
+  font-weight: 900;
+  line-height: 1.25;
+  color: #0f1f3f;
+  font-size: clamp(22px, 3.6vw, 48px);
+}
+
+.step3-subline {
+  margin: 6px 0 14px;
+  font-weight: 900;
+  color: #0f1f3f;
+  font-size: clamp(20px, 2.8vw, 36px);
+}
+
+.step3-headline .accent-blue {
+  color: #1E4FD6;
+}
+
+.step3-bullets {
+  margin: 8px 0 0;
+  padding-left: 1.1em;
+  color: rgba(15, 31, 63, .88);
+  font-weight: 600;
+  font-size: clamp(14px, 1.6vw, 20px);
+}
+
+.step3-bullets li {
+  margin: .3em 0;
+}
+
+/* 반응형: 모바일에서는 중앙 정렬로 재배치 */
+@media (max-width:980px) {
+  .step3-title {
+    text-align: center;
+  }
+
+  .step3__img-card {
+    margin: 0 auto;
+    width: min(92vw, 720px);
+  }
+
+  .step3__img-cta {
+    position: relative;
+    right: auto;
+    top: auto;
+    display: block;
+    margin: 12px auto 0;
+    width: min(56vw, 220px);
+  }
+
+  .step3-bottomcopy {
     text-align: center;
   }
 }
 
-@media (max-width:640px) {
-  .hero__title {
-    font-size: 32px;
+/* keep step2 background tokens */
+.step4-bg {
+  position: relative;
+  padding: 48px 0 120px;
+}
+
+/* card = step2-card */
+.step4-card {
+  position: relative;
+  overflow: visible;
+  z-index: 2;
+  max-width: min(1180px, 92vw);
+  margin: 0 auto;
+  padding: clamp(26px, 3.2vw, 42px);
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .18) 0%, rgba(255, 255, 255, .08) 100%);
+  border: 2px solid rgba(39, 78, 155, .28);
+  box-shadow: 0 22px 36px rgba(0, 0, 0, .22), inset 0 1px 0 rgba(255, 255, 255, .35);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* STEP 4 label + title (title right-aligned) */
+.step4-eyebrow {
+  position: absolute;
+  top: clamp(16px, 1.8vw, 22px);
+  right: clamp(18px, 2vw, 28px);
+  font-weight: 900;
+  color: #214EB9;
+  letter-spacing: .5px;
+  font-size: clamp(22px, 2.4vw, 38px);
+}
+
+.step4-title {
+  margin: clamp(18px, 2.4vw, 28px) 0 clamp(10px, 1.4vw, 14px);
+  text-align: right;
+  padding-right: clamp(6px, 1.2vw, 18px);
+  font-size: clamp(24px, 3.2vw, 44px);
+  font-weight: 900;
+  color: #0f1f3f;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+}
+
+/* rows */
+.step4-row {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.step4-row+.step4-row {
+  margin-top: clamp(22px, 3vw, 32px);
+}
+
+.step4-row--chatgpt {
+  justify-content: flex-start;
+}
+
+.step4-row--claude {
+  justify-content: flex-end;
+}
+
+.step4-row--gemini {
+  justify-content: flex-start;
+}
+
+/* LLM names above bubbles */
+.step4-name {
+  position: absolute;
+  top: -28px;
+  font-weight: 900;
+  font-size: clamp(18px, 2.2vw, 28px);
+  color: #0f1f3f;
+}
+
+.step4-name--left {
+  left: clamp(8px, 1.2vw, 14px);
+}
+
+.step4-name--right {
+  right: clamp(8px, 1.2vw, 14px);
+}
+
+/* badges: bigger */
+.step4-badge {
+  width: clamp(160px, 15vw, 248px);
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, .28));
+}
+
+.step4-badge--chatgpt {
+  margin-left: 2px;
+}
+
+.step4-badge--claude {
+  margin-right: 2px;
+}
+
+.step4-badge--gemini {
+  margin-left: 2px;
+}
+
+/* bubbles */
+.step4-bubble {
+  border-radius: 18px;
+  padding: clamp(14px, 1.8vw, 22px) clamp(16px, 2.2vw, 26px);
+  max-width: min(760px, 66vw);
+  box-shadow: 0 16px 28px rgba(0, 0, 0, .22);
+  line-height: 1.55;
+  font-weight: 700;
+  font-size: clamp(13px, 1.35vw, 17px);
+}
+
+.step4-bubble ul {
+  margin: 0;
+  padding-left: 1.1em;
+}
+
+.step4-bubble li {
+  margin: .35em 0;
+}
+
+/* bubble colors ≈ Figma */
+.step4-bubble--chatgpt {
+  color: #fff;
+  background: linear-gradient(180deg, #403E3E 0%, #403E3E 100%);
+}
+
+.step4-bubble--claude {
+  color: #1b130a;
+  background: linear-gradient(180deg, #D09C7B 0%, #D09C7B 100%);
+}
+
+.step4-bubble--gemini {
+  color: #082036;
+  background: linear-gradient(180deg, #A5C7F1 0%, #A5C7F1 100%);
+}
+
+/* responsive */
+@media (max-width:980px) {
+  .step4-title {
+    text-align: right;
   }
 
-  .hero__subtitle {
-    font-size: 16px;
+  .step4-row {
+    flex-direction: row;
+  }
+
+  .step4-bubble {
+    max-width: 100%;
+  }
+
+  .step4-name {
+    top: -22px;
   }
 }
-/* =========================
-   STEPS (Frame7.png 배경 + 글래스 카드)
-   ========================= */
-   .steps{
-    /* 변수 (피그마 값 기반) */
-    --panel-max-w: 1333px;
-    --panel-pad-x: 32px;
-  
-    /* 좌/우 카드의 세로 패딩을 분리해 컨트롤 */
-    --panel-pad-y-1: 18px;   /* STEP 1: 더 낮게 */
-    --panel-pad-y-2: 34px;   /* STEP 2: 더 높게 */
-  
-    /* 아이콘 크기 */
-    --icon-kakao-w: 84px;
-    --icon-apple-w: clamp(52px, 4.8vw, 72px); /* ✅ 애플 로고 축소 */
-    --icon-naver-w: 84px;
-  
-    /* 삽화 크기 */
-    --form-w: 620px;
-    --laptop-w: 560px;
-  
-    position: relative;
-    background: center top / cover no-repeat;  /* bg 이미지는 JSX 인라인 스타일로 주입 */
-    padding: clamp(56px, 6vw, 80px) 0 clamp(100px, 10vw, 160px);
-    isolation: isolate;
-    overflow: hidden;
+
+@media (max-width:640px) {
+  .step4-row {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
-  .steps__inner{
-    position: relative;
-    max-width: 1440px;
-    margin: 0 auto;
+
+  .step4-row--claude {
+    align-items: flex-end;
   }
-  
-  /* 글래스 카드 공통 */
-  .steps__panel{
-    position: relative;
-    width: min(var(--panel-max-w), 92vw);
-    margin: 0 auto clamp(48px, 6vw, 72px);
-    border-radius: 30px;
-  
-    /* ✅ 글래스모피즘 */
-    background: rgba(255, 255, 255, 0.10);
-    border: 3px solid #3D51A0;
-    box-shadow: 0 8px 18px rgba(0,0,0,0.28);
-    -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
-  
-    padding-inline: var(--panel-pad-x);
+
+  .step4-name--right {
+    right: 0;
   }
-  
-  /* STEP 1: 높이 ↓ */
-  .steps__panel--left{
-    padding-block: var(--panel-pad-y-1);
-    min-height: 260px; /* 필요시 240~300px 사이로 조정 */
-  }
-  
-  /* STEP 2: 높이 ↑ */
-  .steps__panel--right{
-    padding-block: var(--panel-pad-y-2);
-    min-height: 520px; /* 필요시 480~560px 사이로 조정 */
-  }
-  
-  .steps__panel--left  .steps__panel-body{ text-align: left;  max-width: 860px; }
-  .steps__panel--right .steps__panel-body{ text-align: right; max-width: 860px; margin-left: auto; }
-  
-  /* 타이포 */
-  .steps__eyebrow{
-    margin: 0 0 8px;
-    font-weight: 800;
-    letter-spacing: .04em;
-    color: #2c3e8f;
-    font-size: clamp(16px, 1.6vw, 20px);
-  }
-  .steps__eyebrow--right{ text-align: right; }
-  
-  .steps__title{
-    margin: 0 0 8px;
-    font-weight: 800;
-    color:#0c1f44;
-    text-shadow: 0 3px 12px rgba(0,0,0,.18);
-    font-size: clamp(24px, 2.6vw, 36px);
-  }
-  .steps__title--right{ text-align: right; }
-  
-  .steps__desc{
-    color:#0c1f44;
-    opacity:.9;
-    font-size: clamp(14px, 1.4vw, 18px);
-  }
-  
-  /* STEP1 아이콘들 — 카드 기준 절대배치 */
-  .steps__icon{
-    position: absolute;
-    height: auto;
-    filter: drop-shadow(0 8px 10px rgba(0,0,0,.18));
-    pointer-events: none;
-  }
-  .steps__icon--kakao{
-    top: -26px;
-    right: clamp(120px, 12vw, 160px);
-    width: var(--icon-kakao-w);
-  }
-  .steps__icon--apple{
-    top: -6px;
-    right: 4px;
-    width: var(--icon-apple-w); /* ✅ 축소 반영 */
-  }
-  .steps__icon--naver{
-    top: clamp(44px, 5.2vw, 64px);
-    right: clamp(60px, 8vw, 120px);
-    width: var(--icon-naver-w);
-  }
-  
-  /* STEP2 폼/노트북 — 카드 기준 절대배치 */
-  .steps__form{
-    position: absolute;
-    left: clamp(36px, 4vw, 54px);
-    bottom: clamp(64px, 6vw, 96px);      /* ✅ 여유 추가 */
-    width: min(var(--form-w), 60vw);
-    height: auto;
-    border-radius: 14px;
-    box-shadow: 0 8px 20px rgba(0,0,0,.18);
-  }
-  .steps__laptop{
-    position: absolute;
-    right: clamp(20px, 3vw, 40px);
-    bottom: clamp(-10px, -1.5vw, 0px);   /* ✅ 너무 내려가지 않게 */
-    width: min(var(--laptop-w), 50vw);
-    height: auto;
-    filter: drop-shadow(0 12px 24px rgba(0,0,0,.25));
-  }
-  
-  /* 하단 카피 */
-  .steps__headline{
-    width: min(var(--panel-max-w), 92vw);
-    margin: clamp(40px, 5vw, 64px) auto 8px;
-    padding: 0 var(--panel-pad-x);
-    font-size: clamp(26px, 3vw, 40px);
-    font-weight: 800;
-    color:#0c1f44;
-    text-shadow: 0 3px 12px rgba(0,0,0,.16);
-  }
-  /* ✅ ‘한번에’ 밑줄 제거 */
-  .steps__headline em{
-    color:#3467ff;
-    font-style: normal;
-    text-decoration: none;
-  }
-  .steps__caption{
-    width: min(var(--panel-max-w), 92vw);
-    margin: 0 auto;
-    padding: 0 var(--panel-pad-x);
-    color:#0c1f44; opacity:.85;
-    font-size: clamp(13px, 1.2vw, 16px);
-  }
-  
-  /* 반응형 조정 */
-  @media (max-width: 1200px){
-    .steps{
-      --icon-kakao-w: 72px;
-      /* --icon-apple-w는 clamp라 자동 축소 */
-      --icon-naver-w: 72px;
-      --form-w: 560px;
-      --laptop-w: 520px;
-    }
-  }
-  @media (max-width: 1024px){
-    /* 겹침 방지: 그림들을 카드 내부에서 스택으로 */
-    .steps__form{ position: static; display:block; margin: 16px 0 0 0; width: 100%; }
-    .steps__laptop{ position: static; display:block; margin: 16px 0 0 auto; width: min(480px, 90%); }
-    .steps__panel{ padding-bottom: clamp(22px, 4vw, 36px); }
-  }
-  @media (max-width: 640px){
-    .steps__icon{ display:none; } /* 모바일은 아이콘 숨겨 가독성 우선 */
-  }
-  
+}
+
+/* ===== CTA 섹션 (STEP2/4 톤 유지) ===== */
+.cta-bg {
+  position: relative;
+  padding: clamp(56px, 8vw, 120px) 0 clamp(120px, 14vw, 180px);
+  /* 상단 소프트 블롭 */
+}
+
+.cta-bg::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  top: -18vh;
+  height: 38vh;
+  background:
+    radial-gradient(50% 80% at 55% 10%, rgba(161, 137, 255, .28) 0%, rgba(161, 137, 255, 0) 60%),
+    radial-gradient(60% 90% at 30% 30%, rgba(116, 196, 255, .26) 0%, rgba(116, 196, 255, 0) 62%);
+  pointer-events: none;
+  filter: blur(2px);
+}
+
+.cta-wrap {
+  max-width: min(980px, 92vw);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.cta-title {
+  margin: 0 0 clamp(18px, 2.6vw, 28px);
+  font-weight: 900;
+  line-height: 1.25;
+  color: #0f1f3f;
+  font-size: clamp(24px, 4vw, 48px);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+}
+
+.cta-button {
+  text-decoration: none;
+  display: inline-block;
+  padding: clamp(10px, 1.2vw, 14px) clamp(18px, 2.4vw, 26px);
+  border-radius: 14px;
+  background: #3E73E0;
+  /* 메인 블루 */
+  color: #fff;
+  font-weight: 900;
+  font-size: clamp(14px, 1.6vw, 18px);
+  box-shadow: 0 12px 22px rgba(0, 0, 0, .18);
+  transform: translateZ(0);
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 28px rgba(0, 0, 0, .22);
+}
+
+.cta-button:active {
+  transform: translateY(0);
+  box-shadow: 0 10px 18px rgba(0, 0, 0, .18);
+  background: #355fcc;
+}
+
+.cta-caption {
+  margin: clamp(16px, 2vw, 22px) 0 0;
+  color: rgba(15, 31, 63, .85);
+  font-weight: 600;
+  font-size: clamp(13px, 1.5vw, 16px);
+}
+
+.cta-footer {
+  position: relative;
+  max-width: min(1180px, 92vw);
+  margin: clamp(28px, 6vw, 40px) auto 0;
+  color: rgba(15, 31, 63, .65);
+  font-size: 12px;
+}
+
+/* 전역 푸터: 화면 하단에 자연 배치, 배경 분리 */
+.site-footer {
+  background: #E9EEF7;
+  /* 본문과 미묘하게 다른 색 */
+  border-top: 1px solid rgba(15, 31, 63, .08);
+  color: rgba(15, 31, 63, .62);
+  font-size: 12px;
+}
+
+.site-footer__inner {
+  max-width: min(1180px, 92vw);
+  margin: 0 auto;
+  padding: 16px 0;
+}
