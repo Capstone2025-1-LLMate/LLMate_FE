@@ -41,7 +41,21 @@
 
 .header-buttons {
   display: flex;
+  align-items: center;
   gap: 10px;
+}
+
+.session-timer {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;    /* 아이콘과 숫자 간격 */
+  font-weight: 600;
+}
+
+.timer-icon{
+  width: 40px;
+  height: 40px;
 }
 
 .mypage-button,
