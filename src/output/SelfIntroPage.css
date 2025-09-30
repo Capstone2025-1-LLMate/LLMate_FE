@@ -104,11 +104,11 @@
     color: var(--accent);
   }
   
-  .submit-arrow::before {
-    content: '\2191';           /* 위를 향하는 화살표 유니코드 */
+  /* .submit-arrow::before {
+    content: '\2191';           
     display: block;
     font-size: 3rem;
-  }
+  }  */
   
   /* 포커스 시 경계 강조 */
   .input-field:focus {

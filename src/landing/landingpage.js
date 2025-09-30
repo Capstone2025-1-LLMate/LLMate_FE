@@ -3,6 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./landingpage.css";
 
+import Header from "../layout/headers"; // 🔹 공용 Header 사용
 import emoticon from "../asset/emoticon.jpg";
 import gptLogo from "../asset/gptLogo.png";
 import gemLogo from "../asset/gemLogo.png";

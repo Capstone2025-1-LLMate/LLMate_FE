@@ -1,13 +1,15 @@
 // src/App.js
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LoginPage from "./login/loginpage";
+import LoginPage from "./login/LoginPage";
 import MyPage from "./mypage/mypage";
 import OutputPage from './output/outputpage';
-import InputPage from './input/inputpage';
+import InputPage from './input/inputPage';
 import ModifyPage from './modify/modifypage';
 import LandingPage from './landing/landingpage';
-
+import InputPage2 from "./input/inputpage2";
+import OutputPage2 from "./output/outputpage2";
+import ModifyPage2 from "./modify/modifypage2";
 import './App.css';
 
 function App() {
@@ -22,7 +24,9 @@ function App() {
           <Route path="/modify"element={<ModifyPage />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/landingpage" element={<LandingPage />} />
-
+          <Route path="/input2" element={<InputPage2 />} />
+          <Route path="/output2" element={<OutputPage2 />} />
+          <Route path="/modify2" element={<ModifyPage2/>} />
         </Routes>
         {/* <OutputPage /> */}
         {/* <InputPage/> */}  
