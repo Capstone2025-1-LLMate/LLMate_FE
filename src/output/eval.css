@@ -1,64 +1,140 @@
+/* src/output/eval.css */
 .evaluation-container{
-    font-family: sans-serif;
-    background: #fff;
-} 
-.evaluation-title {
-    margin-bottom: 40px;
-    border-left: 4px solid #649AE4;
-    padding-left: 12px;
-    font-size: 1.5rem;
-    color: #333;
-  }
-  .evaluation-list {
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-  }
-  .evaluation-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-  }
-  .avatar {
-    position: relative;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .avatar img{
-    position: absolute;
-    width: 80px;
-    height: 80px;
+  font-family: sans-serif;
+  background: #fff;
 }
-  .bubble {
-    background: #f7fbff;
-    padding: 30px 32px;
-    border-radius: 12px;
-    position: relative;
-    max-width: 800px;
-  }
-  .bubble::before {
-    content: '';
-    position: absolute;
-    left: -8px;
-    top: 16px;
-    width: 0;
-    height: 0;
-    border-top: 8px solid transparent;
-    border-bottom: 8px solid transparent;
-    border-right: 8px solid #f7fbff;
-  }
-  .reviewer-name {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 8px;
-    font-size: 23px;
-  }
-  .review-text {
-    margin: 0;
-    line-height: 1.4;
-    color: #333;
-    font-size: 19px;
-  }
-  
+.evaluation-title{
+  margin-bottom: 40px;
+  border-left: 4px solid #649AE4;
+  padding-left: 12px;
+  font-size: 1.5rem;
+  color: #333;
+}
+.evaluation-list{
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.evaluation-item{
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.avatar{
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.avatar img{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.bubble{
+  background: #f7fbff;
+  padding: 30px 32px;
+  border-radius: 12px;
+  position: relative;
+  max-width: 800px;
+  display: inline-block;     /* 버튼 클릭 가림 방지 */
+  z-index: 0;
+}
+.bubble::before{
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 16px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 8px solid #f7fbff;
+}
+.reviewer-name{
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 23px;
+}
+.review-text{
+  margin: 0;
+  line-height: 1.6;
+  color: #333;
+  font-size: 19px;
+  white-space: pre-wrap;
+}
+/* src/output/eval.css */
+.evaluation-container{
+  font-family: sans-serif;
+  background: #fff;
+}
+.evaluation-title{
+  margin-bottom: 40px;
+  border-left: 4px solid #649AE4;
+  padding-left: 12px;
+  font-size: 1.5rem;
+  color: #333;
+}
+.evaluation-list{
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.evaluation-item{
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.avatar{
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.avatar img{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.bubble{
+  background: #f7fbff;
+  padding: 30px 32px;
+  border-radius: 12px;
+  position: relative;
+  max-width: 800px;
+  display: inline-block;     /* 버튼 클릭 가림 방지 */
+  z-index: 0;
+}
+.bubble::before{
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 16px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 8px solid #f7fbff;
+}
+.reviewer-name{
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 23px;
+}
+.review-text{
+  margin: 0;
+  line-height: 1.6;
+  color: #333;
+  font-size: 19px;
+  white-space: pre-wrap;
+}
