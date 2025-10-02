@@ -67,7 +67,7 @@ body {
 }
 
 .new-required {
-  color: #20c997;
+  color: #649AE4;
 }
 
 .new-qna-item {
@@ -146,12 +146,12 @@ body {
 }
 
 .experience-item:hover {
-  border-color: #29c2b1;
+  border-color: #649AE4;
 }
 
 .experience-item.selected {
-  border-color: #29c2b1;
-  box-shadow: 0 0 0 1px #29c2b1;
+  border-color: #649AE4;
+  box-shadow: 0 0 0 1px #649AE4;
 }
 
 .experience-checkbox {
@@ -167,8 +167,8 @@ body {
 }
 
 .experience-item.selected .experience-checkbox {
-  background-color: #29c2b1;
-  border-color: #29c2b1;
+  background-color: #649AE4;
+  border-color: #649AE4;
 }
 
 .checkmark {
@@ -196,7 +196,7 @@ body {
 }
 
 .new-submit-button {
-  background-color: #29c2b1;
+  background-color: #649AE4;
   color: white;
   border: none;
   padding: 15px 60px;
@@ -210,7 +210,7 @@ body {
   width: 24px;
   height: 24px;
   border: 3px solid rgba(0, 0, 0, 0.1);
-  border-top: 3px solid #29c2b1;
+  border-top: 3px solid #649AE4;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto;
