@@ -11,7 +11,6 @@ import claudeLogo from "../asset/claudeLogo.png";
 import ring from "../asset/persona-rings.png"
 import { useEffect } from "react";
 
-// /* ⬇️ 파일명은 이대로 맞춰줘 (원래 파일명이 다르면 rename) */
 // import heroPen from "../asset/hero-pen.png";        // 히어로 펜 이미지
 // import avatar from "../asset/persona-avatar.png";   // 페르소나 아바타
 // import stepsFrame from "../asset/steps-frame.png";
@@ -37,19 +36,7 @@ export default function LandingPage() {
 
   return (
     <main className="landing">
-      {/* Header */}
-      <header className="header">
-        <div className="container header__inner">
-          <div className="brand">
-            <span className="brand__logo">다:서</span>
-            <span className="brand__tagline">
-              <span className="brand__accent">다多</span> 시점에서{" "}
-              <span className="brand__accent">자기소개서</span>를 보다
-            </span>
-          </div>
-          <Link to="/login" className="btn btn--ghost">로그인</Link>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero */}
       <section className="hero hero--light">

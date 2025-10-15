@@ -1,0 +1,97 @@
+:root {
+    --btn-h: 44px;
+    --btn-r: 10px;
+    --btn-bg: #649AE4;
+    --btn-color: #fff;
+    --btn-font: 17px;
+    /* 기존보다 +5px 정도 증가 */
+    --btn-w: auto;
+    /* 기본은 자동 너비 */
+}
+
+.btn,
+.btn:link,
+.btn:visited,
+button.btn,
+input[type="button"].btn,
+input[type="submit"].btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--btn-h);
+    padding: 0 20px;
+    /* 살짝 넓힘 */
+    border-radius: var(--btn-r);
+    font-size: var(--btn-font);
+    font-weight: 700;
+    color: var(--btn-color);
+    text-decoration: none;
+    cursor: pointer;
+    border: 0;
+    transition: filter .15s ease, transform .02s ease;
+    width: var(--btn-w);
+    /* 가변 → 고정 옵션용 */
+}
+
+/* variants */
+.btn--primary {
+    background: var(--btn-bg);
+}
+
+.btn--primary:hover {
+    filter: brightness(0.95);
+}
+
+.btn--primary:active {
+    transform: translateY(1px);
+}
+
+.btn--ghost {
+    background: transparent;
+    border: 1px solid var(--btn-bg);
+    color: var(--btn-bg);
+}
+
+.btn--ghost:hover {
+    background: rgba(100, 154, 228, .1);
+}
+
+.btn--ghost:active {
+    transform: translateY(1px);
+}
+
+/* width options */
+.btn--wide {
+    --btn-w: 200px;
+}
+
+/* 고정 너비 */
+.btn--w220 {
+    --btn-w: 220px;
+}
+
+/* 필요시 더 넓게 */
+.btn--block {
+    width: 100%;
+}
+
+/* 꽉 차기 */
+
+/* size options */
+.btn--sm {
+    --btn-h: 40px;
+    padding: 0 16px;
+    font-size: 15px;
+}
+
+.btn--lg {
+    --btn-h: 56px;
+    padding: 0 24px;
+    font-size: 19px;
+}
+
+/* focus */
+.btn:focus-visible {
+    outline: 3px solid rgba(100, 154, 228, .35);
+    outline-offset: 2px;
+}

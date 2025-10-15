@@ -6,7 +6,6 @@
   align-items: center;
   padding: 20px 0;
   border-bottom: 1px solid #e9ecef;
-  margin-bottom: 30px;
   background-color: #ffffff;
 }
 
@@ -14,7 +13,8 @@
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
-  padding: 0 15px; /* Add some padding for smaller screens */
+  padding: 0 15px;
+  /* Add some padding for smaller screens */
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
@@ -39,6 +39,13 @@
   margin-left: 12px;
 }
 
+/* 로고 강조 색상 */
+.logo-accent {
+  color: #649AE4;
+  /* 두번째 스샷의 민트 */
+  font-weight: 700;
+}
+
 .header-buttons {
   display: flex;
   align-items: center;
@@ -49,11 +56,12 @@
   font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 6px;    /* 아이콘과 숫자 간격 */
+  gap: 6px;
+  /* 아이콘과 숫자 간격 */
   font-weight: 600;
 }
 
-.timer-icon{
+.timer-icon {
   width: 40px;
   height: 40px;
 }
@@ -61,7 +69,7 @@
 .mypage-button,
 .logout-button,
 .login-button {
-  background-color: #29c2b1;
+  background-color: #649AE4;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -70,5 +78,3 @@
   font-size: 0.9rem;
   font-weight: 500;
 }
-
-

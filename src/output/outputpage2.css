@@ -1,5 +1,6 @@
 /* src/output/outputpage2.css */
-@import url('./eval.css'); /* Reuse styles from eval.css */
+@import url('./eval.css');
+/* Reuse styles from eval.css */
 
 .output-page-container {
   display: flex;
@@ -11,7 +12,8 @@
 .output-main-content {
   display: flex;
   flex: 1;
-  overflow: hidden; /* Prevent scrolling at the container level */
+  overflow: hidden;
+  /* Prevent scrolling at the container level */
 }
 
 /* Aside (Sidebar) */
@@ -69,12 +71,12 @@
 }
 
 .aside-question-item span {
-    display: block;
-    font-size: 0.9rem;
-    margin-top: 5px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  display: block;
+  font-size: 0.9rem;
+  margin-top: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .aside-question-item:hover {
@@ -93,7 +95,7 @@
   right: 15px;
   top: 50%;
   transform: translateY(-50%);
-  color: #20c997;
+  color: #649AE4;
   font-size: 1.5rem;
 }
 
@@ -124,7 +126,8 @@
 .output-content-area {
   flex: 1;
   padding: 40px 60px;
-  overflow-y: auto; /* Allow scrolling for the content */
+  overflow-y: auto;
+  /* Allow scrolling for the content */
   transition: margin-left 0.3s ease;
 }
 
@@ -135,7 +138,8 @@
 .essay-question {
   font-size: 1.6rem;
   color: #1F2D5D;
-  margin-bottom: 15px; /* Adjusted margin */
+  margin-bottom: 15px;
+  /* Adjusted margin */
 }
 
 .essay-title {
@@ -149,7 +153,8 @@
   font-size: 1.1rem;
   line-height: 1.8;
   color: #333;
-  white-space: pre-wrap; /* To respect newlines */
+  white-space: pre-wrap;
+  /* To respect newlines */
   border: 1px solid #5984B0;
   padding: 20px;
   border-radius: 20px;
@@ -163,9 +168,10 @@
   margin-top: 40px;
 }
 
-.btn-save, .btn-edit {
+.btn-save,
+.btn-edit {
   padding: 12px 50px;
-  border: 1px solid #20c997;
+  border: 1px solid #649AE4;
   border-radius: 8px;
   font-size: 1.1rem;
   font-weight: 500;
@@ -174,21 +180,21 @@
 }
 
 .btn-save {
-  background-color: #20c997;
+  background-color: #649AE4;
   color: #fff;
 }
 
 .btn-edit {
   background-color: #fff;
-  color: #20c997;
+  color: #649AE4;
 }
 
 .btn-save:hover {
-    background-color: #1baa80;
+  background-color: #074a8d;
 }
 
 .btn-edit:hover {
-    background-color: #f1f3f5;
+  background-color: #f1f3f5;
 }
 
 /* Styles for Edit/Modify Input Bubble */
@@ -213,7 +219,8 @@
   resize: none;
   outline: none;
   overflow-y: auto;
-  padding: 8px 45px 8px 8px; /* Right padding for button */
+  padding: 8px 45px 8px 8px;
+  /* Right padding for button */
   box-sizing: border-box;
 }
 
@@ -222,7 +229,8 @@
   top: 50%;
   right: 20px;
   transform: translateY(-50%);
-  width: 45px; /* Set a specific size for the button */
+  width: 45px;
+  /* Set a specific size for the button */
   height: 45px;
   background-image: url('../asset/up_arrow.png');
   background-size: contain;
@@ -244,15 +252,15 @@
 } */
 
 .input-field:focus {
-  outline: 1px solid #20c997;
+  outline: 1px solid #649AE4;
   border-radius: 8px;
 }
 
 .input-bubble .spinner {
-    position: absolute;
-    top: 35%;
-    right: 20px;
-    transform: translateY(-50%);
-    width: 28px;
-    height: 28px;
+  position: absolute;
+  top: 35%;
+  right: 20px;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
 }
