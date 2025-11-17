@@ -21,10 +21,10 @@ const Evaluation = ({ evaluations = [] }) => {
   return (
     <div className="evaluation-container">
       <div className="evaluation-list">
-        {evaluations.map(({ feedback_id, llm_model, feedback_text }) => {
-          const reviewerName = modelMap[llm_model] || llm_model;
+        {evaluations.map(({ id, reviewer, text }) => {
+          const reviewerName = modelMap[reviewer] || reviewer;
           return (
-            <div key={feedback_id} className="evaluation-item">
+            <div key={id} className="evaluation-item">
               <div className="avatar">
                 <img
                   src={icons[reviewerName]}

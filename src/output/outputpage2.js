@@ -68,6 +68,7 @@ const mockData = {
 const OutputPage2 = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  console.log(location.state);
 
   const [essays, setEssays] = useState([]);
   const [company, setCompany] = useState('');
@@ -95,11 +96,34 @@ const OutputPage2 = () => {
   useEffect(() => {
     const data = location.state || mockData;
     if (data && data.essays) {
-      setEssays(data.essays);
+      const modelMap = {
+        "gpt-4o-mini": "ChatGPT",
+        "gpt-4o": "ChatGPT",
+        gemini: "Gemini",
+        claude: "Claude",
+        Perplexity: "Perplexity",
+      };
+
+      const processedEssays = data.essays.map(essay => ({
+        ...essay,
+        evaluations: (essay.evaluations || []).map((item, idx) => {
+          const id = item.id ?? item.feedback_id ?? idx + 1;
+          const model = item.reviewer ?? item.llm_model ?? "";
+          const text = item.text ?? item.feedback_text ?? "";
+          return {
+            id,
+            reviewer: modelMap[model] || model,
+            text,
+          };
+        })
+      }));
+      console.log(processedEssays);
+
+      setEssays(processedEssays);
       setCompany(data.company_name);
       setPosition(data.job_position);
-      if (data.essays.length > 0) {
-        setSelectedEssayId(data.essays[0].id);
+      if (processedEssays.length > 0) {
+        setSelectedEssayId(processedEssays[0].id);
       }
     }
   }, [location.state]);
@@ -125,6 +149,9 @@ const OutputPage2 = () => {
   }, [selectedEssayId, essays]);
 
   const selectedEssay = essays.find(e => e.id === selectedEssayId);
+  if (selectedEssay) {
+    console.log(selectedEssay.evaluations);
+  }
 
   const handleSave = () => navigate("/mypage");
 
@@ -195,7 +222,24 @@ const OutputPage2 = () => {
       if (!feedbackRes.ok) throw new Error("Failed to fetch feedback");
       const feedbackData = await feedbackRes.json();
 
-      const newEvaluations = feedbackData.feedbacks || [];
+      const modelMap = {
+        "gpt-4o-mini": "ChatGPT",
+        "gpt-4o": "ChatGPT",
+        gemini: "Gemini",
+        claude: "Claude",
+        Perplexity: "Perplexity",
+      };
+
+      const newEvaluations = (feedbackData.feedbacks || []).map((item, idx) => {
+        const id = item.id ?? item.feedback_id ?? idx + 1;
+        const model = item.reviewer ?? item.llm_model ?? "";
+        const text = item.text ?? item.feedback_text ?? "";
+        return {
+          id,
+          reviewer: modelMap[model] || model,
+          text,
+        };
+      });
 
       // 4. Navigate to ModifyPage2 with original and edited data
       navigate("/modify2", {
