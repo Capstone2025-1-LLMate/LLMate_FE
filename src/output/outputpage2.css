@@ -264,3 +264,11 @@
   width: 28px;
   height: 28px;
 }
+
+.model-icon {
+  width: 64px;
+  height: 64px;
+  background-size: cover;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}

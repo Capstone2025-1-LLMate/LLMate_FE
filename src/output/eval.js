@@ -6,9 +6,9 @@ import geminiIcon from '../asset/gemLogo.png';
 import claudeIcon from '../asset/claudeLogo.png';
 
 const icons = {
-    ChatGPT: chatgptIcon,
-    Gemini: geminiIcon,
-    Claude: claudeIcon,
+  ChatGPT: chatgptIcon,
+  Gemini: geminiIcon,
+  Claude: claudeIcon,
 };
 
 const Evaluation = ({ evaluations = [] }) => {
@@ -32,10 +32,10 @@ const Evaluation = ({ evaluations = [] }) => {
                   className="avatar-img"
                 />
               </div>
-              <div className="bubble">
+              <div className="evaluation-bubble">
                 <span className="reviewer-name">{reviewerName}</span>
                 {/* <p className="review-text">{feedback_text}</p> */}
-                 {(feedback_text || '')
+                {(feedback_text || '')
                   .split('\n')
                   .filter(line => line.trim() !== '')
                   .map((line, idx) => {
@@ -47,7 +47,7 @@ const Evaluation = ({ evaluations = [] }) => {
                         <br />
                       </React.Fragment>
                     );
-                  })} 
+                  })}
               </div>
             </div>
           );
