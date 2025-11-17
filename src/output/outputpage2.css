@@ -1,12 +1,8 @@
 /* src/output/outputpage2.css */
 @import url('./eval.css');
+/* Reuse styles from eval.css */
 
-/* 헤더 높이 맞춰 조정 */
-:root { --header-h: 72px; }
-html, body, #root { height: 100%; }
-
-/* 페이지 래퍼: 싱글 스크롤 레이아웃 */
-.output-page-container{
+.output-page-container {
   display: flex;
   flex-direction: column;
   height: calc(106dvh - var(--header-h));
@@ -17,9 +13,9 @@ html, body, #root { height: 100%; }
 /* 본문 래퍼 */
 .output-main-content{
   display: flex;
-  height: 100%;
+  flex: 1;
   overflow: hidden;
-  min-height: 0;
+  /* Prevent scrolling at the container level */
 }
 
 /* 사이드바 */
@@ -68,7 +64,8 @@ html, body, #root { height: 100%; }
   transition: background-color 0.2s;
   position: relative;
 }
-.aside-question-item span{
+
+.aside-question-item span {
   display: block;
   font-size: 0.9rem;
   margin-top: 5px;
@@ -116,7 +113,8 @@ html, body, #root { height: 100%; }
   min-height: 0;
   overflow-y: auto;
   padding: 40px 60px;
-  padding-bottom: max(96px, env(safe-area-inset-bottom, 0px));
+  overflow-y: auto;
+  /* Allow scrolling for the content */
   transition: margin-left 0.3s ease;
 }
 
@@ -126,6 +124,7 @@ html, body, #root { height: 100%; }
   font-size: 1.6rem;
   color: #1F2D5D;
   margin-bottom: 15px;
+  /* Adjusted margin */
 }
 .essay-title{
   font-size: 1.2rem;
@@ -138,6 +137,7 @@ html, body, #root { height: 100%; }
   line-height: 1.8;
   color: #333;
   white-space: pre-wrap;
+  /* To respect newlines */
   border: 1px solid #5984B0;
   padding: 20px;
   border-radius: 20px;
@@ -152,7 +152,9 @@ html, body, #root { height: 100%; }
   gap: 20px;
   margin-top: 40px;
 }
-.btn-save, .btn-edit{
+
+.btn-save,
+.btn-edit {
   padding: 12px 50px;
   border: 1px solid #649AE4;
   border-radius: 8px;
@@ -161,10 +163,24 @@ html, body, #root { height: 100%; }
   cursor: pointer;
   transition: background-color 0.2s, color 0.2s;
 }
-.btn-save{ background-color: #649AE4; color: #fff; }
-.btn-edit{ background-color: #fff; color: #649AE4; }
-.btn-save:hover{ background-color: #4a5a8a; }
-.btn-edit:hover{ background-color: #f1f3f5; }
+
+.btn-save {
+  background-color: #649AE4;
+  color: #fff;
+}
+
+.btn-edit {
+  background-color: #fff;
+  color: #649AE4;
+}
+
+.btn-save:hover {
+  background-color: #074a8d;
+}
+
+.btn-edit:hover {
+  background-color: #f1f3f5;
+}
 
 /* 입력 버블 */
 .input-bubble{
@@ -188,6 +204,7 @@ html, body, #root { height: 100%; }
   outline: none;
   overflow-y: auto;
   padding: 8px 45px 8px 8px;
+  /* Right padding for button */
   box-sizing: border-box;
 }
 .submit-arrow{
@@ -196,6 +213,7 @@ html, body, #root { height: 100%; }
   right: 20px;
   transform: translateY(-50%);
   width: 45px;
+  /* Set a specific size for the button */
   height: 45px;
   background-image: url('../asset/up_arrow.png');
   background-size: contain;
@@ -207,11 +225,20 @@ html, body, #root { height: 100%; }
   font-size: 0;
   color: transparent;
 }
-.input-field:focus{
+
+/* .submit-arrow::before {
+  content: '↑';
+  display: block;
+  font-size: 2.5rem;
+  font-weight: bold;
+} */
+
+.input-field:focus {
   outline: 1px solid #649AE4;
   border-radius: 8px;
 }
-.input-bubble .spinner{
+
+.input-bubble .spinner {
   position: absolute;
   top: 35%;
   right: 20px;

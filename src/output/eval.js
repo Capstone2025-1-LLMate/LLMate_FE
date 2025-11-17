@@ -21,10 +21,10 @@ const Evaluation = ({ evaluations = [] }) => {
   return (
     <div className="evaluation-container">
       <div className="evaluation-list">
-        {evaluations.map(({ feedback_id, llm_model, feedback_text }) => {
-          const reviewerName = modelMap[llm_model] || llm_model;
+        {evaluations.map(({ id, reviewer, text }) => {
+          const reviewerName = modelMap[reviewer] || reviewer;
           return (
-            <div key={feedback_id} className="evaluation-item">
+            <div key={id} className="evaluation-item">
               <div className="avatar">
                 <img
                   src={icons[reviewerName]}
@@ -32,10 +32,16 @@ const Evaluation = ({ evaluations = [] }) => {
                   className="avatar-img"
                 />
               </div>
-              <div className="bubble">
+              {/* <div className="bubble">
                 <span className="reviewer-name">{reviewerName}</span>
-                {/* <p className="review-text">{feedback_text}</p> */}
-                 {(feedback_text || '')
+                <div className="review-text" style={{ whiteSpace: 'pre-wrap' }}>
+                  {text}
+                </div>
+              </div> */}
+              <div className="bubble2">
+                <span className="reviewer-name">{reviewerName}</span>
+      
+                 {(text || '')
                   .split('\n')
                   .filter(line => line.trim() !== '')
                   .map((line, idx) => {
@@ -47,8 +53,8 @@ const Evaluation = ({ evaluations = [] }) => {
                         <br />
                       </React.Fragment>
                     );
-                  })} 
-              </div>
+                  })}  
+                </div>
             </div>
           );
         })}

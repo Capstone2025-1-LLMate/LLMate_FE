@@ -20,7 +20,8 @@ body {
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
-  padding: 0 15px; /* Add some padding for smaller screens */
+  padding: 24px 15px 0;
+  /* Add some padding for smaller screens */
   box-sizing: border-box;
 }
 
@@ -44,7 +45,7 @@ body {
   font-size: 1.1rem;
   color: #1F2D5D;
   white-space: nowrap;
-  
+
 }
 
 .new-form-group input {
@@ -182,7 +183,8 @@ body {
   font-size: 0.95rem;
   line-height: 1.5;
   color: #495057;
-  white-space: pre-wrap; /* This ensures line breaks from the content string are respected */
+  white-space: pre-wrap;
+  /* This ensures line breaks from the content string are respected */
 }
 
 .experience-content p:last-child {
@@ -217,8 +219,13 @@ body {
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .mt15 {

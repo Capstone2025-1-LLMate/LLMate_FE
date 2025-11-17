@@ -19,14 +19,17 @@ const InputPage2 = () => {
   const [userExperiences, setUserExperiences] = useState([]);
   const [selectedExpIds, setSelectedExpIds] = useState(new Set());
   
-  const [isLoading, setIsLoading] = useState(true);
-
+  // const [isLoading, setIsLoading] = useState(true);
+  const [isExpLoading, setIsExpLoading] = useState(true); // 경험 불러오기 로딩
+  const [isSubmitLoading, setIsSubmitLoading] = useState(false); // 제출 버튼 로딩
+  
   // 경험 전체 조회
   useEffect(() => {
     const fetchExperiences = async () => {
 
-      setIsLoading(true);
-
+      // setIsLoading(true);
+      setIsExpLoading(true); // 🌟 isExpLoading 사용
+      
       try {
         const response = await authFetch('http://localhost:8000/api/essay-info/essay-experience');
 
@@ -39,11 +42,13 @@ const InputPage2 = () => {
 
         // type이 experience인 것만 필터링
         setUserExperiences(experiences.filter(exp => exp.type === 'experience'));
-        setIsLoading(false);
+        // setIsLoading(false);
+        setIsExpLoading(false); // 🌟 isExpLoading 사용
 
       } catch (err) {
         console.error('Failed to fetch experiences:', err);
-        setIsLoading(false);
+        // setIsLoading(false);
+        setIsExpLoading(false); // 🌟 isExpLoading 사용
       }
     };
     fetchExperiences();
@@ -73,8 +78,9 @@ const InputPage2 = () => {
   };
 
   const handleSubmit = async () => {
-    setIsLoading(true);
-
+    // setIsLoading(true);
+    setIsSubmitLoading(true); // 🌟 isSubmitLoading 사용
+    
     const selectedExperiences = userExperiences
       .filter(exp => selectedExpIds.has(exp.experience_id))
       .map(exp => exp.content)
@@ -112,7 +118,8 @@ const InputPage2 = () => {
     } catch (err) {
       console.error('Failed to generate essay:', err);
     } finally {
-      setIsLoading(false);
+      // setIsLoading(false);
+      setIsSubmitLoading(false); // 🌟 isSubmitLoading 사용
     }
   };
 
@@ -151,7 +158,8 @@ const InputPage2 = () => {
             ✨ 자기소개서에 넣을 경험 및 활동을 선택해 주세요!
           </div>
           <div className="experience-list">
-            {isLoading ? (
+            {/* {isLoading ? ( */}
+            {isExpLoading ? ( // 🌟 isExpLoading에 따라 렌더링
               <Spinner />
             ) : userExperiences.length > 0 ? (
               userExperiences.map(exp => (
@@ -184,8 +192,11 @@ const InputPage2 = () => {
           </div>
         </div>
         
-        <div className="new-submit-container">
+        {/* <div className="new-submit-container">
           {isLoading ? <Spinner /> : <button className="new-submit-button" onClick={handleSubmit}>제작하기</button>}
+        </div> */}
+        <div className="new-submit-container">
+          {isSubmitLoading ? <Spinner /> : <button className="new-submit-button" onClick={handleSubmit}>제작하기</button>} {/* 🌟 isSubmitLoading에 따라 렌더링 */}
         </div>
       </main>
     </div>
