@@ -7,12 +7,18 @@ import { authFetch } from '../utils/authFetch';
 
 const Spinner = () => <div className="spinner" />;
 
+const modelMeta = {
+  'gpt-4o-mini': { icon: 'chatgpt', label: 'ChatGPT' },
+  'gemini': { icon: 'gemini', label: 'Gemini' },
+  'claude': { icon: 'claude', label: 'Claude' },
+};
+
 // Mock data for development if location.state is not available
 const mockData = {
   company_name: "네이버",
   job_position: "백엔드 개발자",
   essays: [
-    { 
+    {
       id: 1,
       user_id: 1, // For testing modify feature
       essay_question_id: 1, // For testing modify feature
@@ -20,10 +26,25 @@ const mockData = {
       content: `네이버의 대규모 트래픽을 처리하는 백엔드 시스템 개발은 높은 수준의 기술력과 데이터 처리 역량이 요구되는 분야로, 제 경험과 강점을 효과적으로 활용할 수 있는 환경이라고 생각합니다. 해외 기업에서 웹 백엔드 인턴으로 근무하며 대규모 분산 시스템을 설계하고, 데이터베이스 최적화 및 API 성능 개선을 수행한 경험이 있습니다. 이를 통해 트래픽 부하를 효율적으로 분산하고 확장 가능한 서비스를 구축하는 역량을 키웠습니다.
 또한, 다층 LLM을 활용한 웹 프로젝트를 진행하며 대량의 데이터를 처리하는 백엔드 환경을 설계하고, 모델 응답 속도를 최적화하기 위한 캐싱 및 비동기 처리 기법을 적용한 경험이 있습니다. 데이터 분석 대회에서는 대용량 데이터 처리 및 모델 최적화 기술을 적용해 수상하며, 데이터 기반 문제 해결 능력을 검증받았습니다.`,
       evaluations: [
-        { id: 1, reviewer: 'ChatGPT', text: '목표와 경험의 연결이 잘 되어 있어요. 문단 구성이 주제별로 나뉘어 흐름이 자연스러워요.' },
-        { id: 2, reviewer: 'Gemini', text: '네이버에 대한 관심과 열정은 잘 느껴져요! 하지만 클라우드 전문가로 어떤 강점이 있는지 구체적인 사례나 경험을 더 보여주면 좋겠어요.' },
-        { id: 3, reviewer: 'Claude', text: '문장이 전반적으로 자연스럽고 맥락이 잘 이어집니다! 맞춤법, 띄어쓰기, 문법적 오류가 없어 정확성이 높습니다.' },
-      ]
+        {
+          feedback_id: 1,
+          llm_model: "gpt-4o-mini",
+          feedback_text:
+            "목표와 경험의 연결이 잘 되어 있어요. 문단 구성이 주제별로 나뉘어 흐름이 자연스러워요.",
+        },
+        {
+          feedback_id: 2,
+          llm_model: "gemini",
+          feedback_text:
+            "네이버에 대한 관심과 열정은 잘 느껴져요! 하지만 클라우드 전문가로 어떤 강점이 있는지 구체적인 사례나 경험을 더 보여주면 좋겠어요.",
+        },
+        {
+          feedback_id: 3,
+          llm_model: "claude",
+          feedback_text:
+            "문장이 전반적으로 자연스럽고 맥락이 잘 이어집니다! 맞춤법, 띄어쓰기, 문법적 오류가 없어 정확성이 높습니다.",
+        },
+      ],
     },
     {
       id: 2,
@@ -62,6 +83,17 @@ const OutputPage2 = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    const prevOverflow = document.body.style.overflow;
+    const prevMargin = document.body.style.margin;
+    document.body.style.overflow = 'hidden'; // 바디 스크롤 잠금
+    document.body.style.margin = '0';        // 브라우저 기본 margin 제거
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.body.style.margin = prevMargin;
+    };
+  }, []);
+
+  useEffect(() => {
     const data = location.state || mockData;
     if (data && data.essays) {
       const modelMap = {
@@ -96,13 +128,33 @@ const OutputPage2 = () => {
     }
   }, [location.state]);
 
+  // 선택된 에세이의 평가가 없으면 API로 재조회
+  useEffect(() => {
+    if (!selectedEssayId) return;
+    const cur = essays.find(e => e.id === selectedEssayId);
+    if (!cur || (Array.isArray(cur.evaluations) && cur.evaluations.length > 0)) return;
+    (async () => {
+      try {
+        const res = await authFetch(`http://localhost:8000/api/feedbacks?essay_id=${selectedEssayId}`);
+        if (!res.ok) return;
+        const { feedbacks = [] } = await res.json();
+        const mapped = feedbacks.map(f => ({
+          feedback_id: f.id,
+          llm_model: f.llm_model,
+          feedback_text: f.feedback_text ?? '',
+        }));
+        setEssays(prev => prev.map(e => e.id === selectedEssayId ? { ...e, evaluations: mapped } : e));
+      } catch { }
+    })();
+  }, [selectedEssayId, essays]);
+
   const selectedEssay = essays.find(e => e.id === selectedEssayId);
   if (selectedEssay) {
     console.log(selectedEssay.evaluations);
   }
 
   const handleSave = () => navigate("/mypage");
-  
+
   const handleEdit = () => {
     setIsEditing(true);
   };
@@ -117,7 +169,7 @@ const OutputPage2 = () => {
       alert("수정할 에세이가 선택되지 않았습니다.");
       return;
     }
-    
+
     if (!selectedEssay.user_id || !selectedEssay.essay_question_id) {
       alert("수정 요청에 필요한 정보(user_id, essay_question_id)가 없어 요청을 보낼 수 없습니다.");
       return;
@@ -229,8 +281,8 @@ const OutputPage2 = () => {
             <>
               <nav className="aside-nav">
                 {essays.map(essay => (
-                  <a 
-                    key={essay.id} 
+                  <a
+                    key={essay.id}
                     href="#"
                     className={`aside-question-item ${essay.id === selectedEssayId ? 'selected' : ''}`}
                     onClick={(e) => {
@@ -263,7 +315,7 @@ const OutputPage2 = () => {
               <div className="essay-content-section">
                 <h2 className="essay-question">{selectedEssay.question}</h2>
                 <p className="essay-body">
-                  <span style={{fontWeight : "bold"}}>{selectedEssay.title}</span>
+                  <span style={{ fontWeight: "bold" }}>{selectedEssay.title}</span>
                   <br />
                   {selectedEssay.content.split('\n').map((line, index) => (
                     <React.Fragment key={index}>{line}</React.Fragment>
@@ -271,8 +323,11 @@ const OutputPage2 = () => {
                 </p>
               </div>
               <h2 className="evaluation-title">평가</h2>
-              <Evaluation evaluations={selectedEssay.evaluations} />
-              
+              <Evaluation evaluations={selectedEssay.evaluations || []} />
+              {(!selectedEssay.evaluations || selectedEssay.evaluations.length === 0) && (
+                <p>피드백 로딩 중 또는 없음</p>
+              )}
+
               {!isEditing ? (
                 <div className="action-buttons">
                   <button className="btn-save" onClick={handleSave}>저장</button>

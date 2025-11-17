@@ -81,7 +81,6 @@ const Header = ({ hideLogin = false }) => {
                 <img src={timerIcon} alt="timer" className="timer-icon" />
                 <span>{label}</span>
               </div>
-              {/* <button className="mypage-button" onClick={extendSession}>연장</button> */}
               <button className="mypage-button" onClick={() => navigate('/mypage')}>마이페이지</button>
               <button className="logout-button" onClick={handleLogout}>로그아웃</button>
             </>

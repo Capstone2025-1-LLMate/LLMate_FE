@@ -73,6 +73,10 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.aside-question-item:hover {
+  background-color: #4a5a8a;
+}
 .aside-question-item:hover{ background-color: #4a5a8a; }
 .aside-question-item.selected{
   background-color: #fff;
@@ -245,4 +249,12 @@
   transform: translateY(-50%);
   width: 28px;
   height: 28px;
+}
+
+.model-icon {
+  width: 64px;
+  height: 64px;
+  background-size: cover;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
 }
