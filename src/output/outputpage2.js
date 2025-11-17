@@ -83,17 +83,6 @@ const OutputPage2 = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const prevOverflow = document.body.style.overflow;
-    const prevMargin = document.body.style.margin;
-    document.body.style.overflow = 'hidden'; // 바디 스크롤 잠금
-    document.body.style.margin = '0';        // 브라우저 기본 margin 제거
-    return () => {
-      document.body.style.overflow = prevOverflow;
-      document.body.style.margin = prevMargin;
-    };
-  }, []);
-
-  useEffect(() => {
     const data = location.state || mockData;
     if (data && data.essays) {
       const modelMap = {
@@ -129,24 +118,42 @@ const OutputPage2 = () => {
   }, [location.state]);
 
   // 선택된 에세이의 평가가 없으면 API로 재조회
+  // 선택된 에세이의 평가가 없으면 API로 재조회
   useEffect(() => {
     if (!selectedEssayId) return;
     const cur = essays.find(e => e.id === selectedEssayId);
     if (!cur || (Array.isArray(cur.evaluations) && cur.evaluations.length > 0)) return;
+
     (async () => {
       try {
         const res = await authFetch(`http://localhost:8000/api/feedbacks?essay_id=${selectedEssayId}`);
         if (!res.ok) return;
         const { feedbacks = [] } = await res.json();
-        const mapped = feedbacks.map(f => ({
-          feedback_id: f.id,
-          llm_model: f.llm_model,
-          feedback_text: f.feedback_text ?? '',
+
+        // OutputPage2 첫 번째 useEffect와 동일한 구조로 맞추기
+        const modelMap = {
+          "gpt-4o-mini": "ChatGPT",
+          "gpt-4o": "ChatGPT",
+          gemini: "Gemini",
+          claude: "Claude",
+          Perplexity: "Perplexity",
+        };
+
+        const mapped = feedbacks.map((f, idx) => ({
+          id: f.id ?? f.feedback_id ?? idx + 1,
+          reviewer: modelMap[f.llm_model] || f.llm_model || "",
+          text: f.feedback_text ?? f.text ?? "",
         }));
-        setEssays(prev => prev.map(e => e.id === selectedEssayId ? { ...e, evaluations: mapped } : e));
+
+        setEssays(prev =>
+          prev.map(e =>
+            e.id === selectedEssayId ? { ...e, evaluations: mapped } : e
+          )
+        );
       } catch { }
     })();
   }, [selectedEssayId, essays]);
+
 
   const selectedEssay = essays.find(e => e.id === selectedEssayId);
   if (selectedEssay) {

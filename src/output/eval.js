@@ -34,8 +34,8 @@ const Evaluation = ({ evaluations = [] }) => {
               </div>
               <div className="evaluation-bubble">
                 <span className="reviewer-name">{reviewerName}</span>
-                {/* <p className="review-text">{feedback_text}</p> */}
-                {(feedback_text || '')
+                {/* <p className="review-text">{text}</p> */}
+                {(text || '')
                   .split('\n')
                   .filter(line => line.trim() !== '')
                   .map((line, idx) => {
